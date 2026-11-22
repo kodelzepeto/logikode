@@ -54,13 +54,13 @@ export default function ShopPage() {
 
   const freezeQrisUrl =
     process.env.NEXT_PUBLIC_QRIS_FREEZE_URL ||
-    "https://lynk.id/coredevgroup/freeze-2k";
+    "https://lynk.id/kodel-dev/z5xvr8dvgoxj/checkout";
   const refillQrisUrl =
     process.env.NEXT_PUBLIC_QRIS_REFILL_URL ||
-    "https://lynk.id/coredevgroup/hearts-2k";
+    "https://lynk.id/kodel-dev/2m7w9pvvdo93/checkout";
   const unlimitedQrisUrl =
     process.env.NEXT_PUBLIC_QRIS_UNLIMITED_URL ||
-    "https://lynk.id/coredevgroup/unlimited-3k";
+    "https://lynk.id/kodel-dev/2qw01g6nvzp3/checkout";
 
   return (
     <MobileShell showTopBar={true} showBottomNav={true}>
