@@ -99,8 +99,11 @@ export function QrisPaymentModal({
                 3
               </span>
               <p className="leading-snug">
-                Salin <strong>Kode Voucher</strong> yang didapat, lalu masukkan
-                pada kolom &ldquo;Tukar Kode Voucher&rdquo; di halaman Toko.
+                Salin <strong>Kode Voucher</strong> yang tertera di struk Lynk.id (format:{" "}
+                <code className="text-emerald-700 font-mono font-bold bg-emerald-50 px-1 py-0.5 rounded">
+                  PREFIX-NOMOR_ORDER
+                </code>
+                ), lalu tukarkan di kolom &ldquo;Tukar Kode Voucher&rdquo;.
               </p>
             </div>
           </div>

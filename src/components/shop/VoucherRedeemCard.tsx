@@ -63,7 +63,7 @@ export function VoucherRedeemCard() {
               setVoucherCode(e.target.value.toUpperCase());
               if (feedback) setFeedback(null);
             }}
-            placeholder="CONTOH: LOGIPRO7D"
+            placeholder="CONTOH: FRZ-CDG-82914"
             className="flex-1 font-mono text-xs sm:text-sm font-bold uppercase tracking-wider px-3.5 py-2.5 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:outline-hidden focus:border-emerald-500 transition-colors placeholder:normal-case placeholder:font-sans placeholder:font-normal placeholder:text-slate-400"
           />
           <button
