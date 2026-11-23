@@ -138,6 +138,44 @@ export function useUserProgress() {
     });
   }, []);
 
+  // Aksi: Menerapkan hadiah voucher yang telah divalidasi server
+  const applyVoucherReward = useCallback(
+    (rewardType: VoucherRewardType, code: string) => {
+      const current = getProgressSnapshot();
+      const updatedRedeemed = [
+        ...(current.redeemedVouchers ?? []),
+        code.toUpperCase(),
+      ];
+      const now = Date.now();
+
+      if (rewardType === "FREEZE") {
+        setProgressSnapshot({
+          ...current,
+          streakFreezes: current.streakFreezes + 1,
+          redeemedVouchers: updatedRedeemed,
+        });
+      } else if (rewardType === "REFILL") {
+        setProgressSnapshot({
+          ...current,
+          hearts: 5,
+          lastHeartLostAt: null,
+          redeemedVouchers: updatedRedeemed,
+        });
+      } else if (rewardType === "UNLIMITED_7D") {
+        const currentUntil = current.unlimitedHeartsUntil ?? now;
+        const newUntil = Math.max(now, currentUntil) + 7 * 24 * 60 * 60 * 1000;
+        setProgressSnapshot({
+          ...current,
+          unlimitedHeartsUntil: newUntil,
+          hearts: 5,
+          lastHeartLostAt: null,
+          redeemedVouchers: updatedRedeemed,
+        });
+      }
+    },
+    []
+  );
+
   // Aksi: Reset progres pengguna (kembali ke awal)
   const resetProgress = useCallback(() => {
     clearProgress();
@@ -206,6 +244,7 @@ export function useUserProgress() {
     consumeHeart,
     buyWithXP,
     redeem,
+    applyVoucherReward,
     addStreakFreeze,
     activateUnlimitedHearts,
     resetProgress,
