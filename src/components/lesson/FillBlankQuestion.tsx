@@ -26,9 +26,9 @@ export function FillBlankQuestion({
         {question.prompt}
       </h2>
 
-      {/* Tampilan Template Kode dengan Slot Kosong Terisi */}
-      <div className="w-full bg-slate-900 text-slate-100 rounded-2xl p-4 font-mono text-xs sm:text-sm overflow-x-auto shadow-inner border border-slate-800">
-        <div className="leading-relaxed whitespace-pre-wrap flex flex-wrap items-center gap-1.5">
+      {/* Tampilan Template Kode dengan Slot Kosong Terisi (Urutan Vertikal Asli & Rapi) */}
+      <div className="w-full bg-slate-950 text-slate-100 rounded-2xl p-4 sm:p-5 font-mono text-xs sm:text-sm overflow-x-auto shadow-inner border border-slate-800">
+        <div className="leading-loose whitespace-pre-wrap break-words font-mono text-slate-200">
           {parts.map((part, index) => (
             <React.Fragment key={`part-${index}`}>
               <span>{part}</span>
@@ -37,10 +37,10 @@ export function FillBlankQuestion({
                   type="button"
                   disabled={disabled || !selectedAnswer}
                   onClick={() => onSelect(null)}
-                  className={`inline-flex items-center justify-center min-w-[70px] px-3 py-1 rounded-xl text-xs sm:text-sm font-bold border-2 transition-all select-none ${
+                  className={`inline-flex items-center justify-center align-middle mx-1 min-w-[72px] px-3 py-0.5 rounded-xl text-xs sm:text-sm font-bold border-2 transition-all select-none ${
                     selectedAnswer
                       ? "bg-emerald-500 text-white border-emerald-400 shadow-sm animate-scaleUp cursor-pointer hover:bg-emerald-600"
-                      : "bg-slate-800 text-slate-500 border-dashed border-slate-600"
+                      : "bg-slate-800 text-slate-400 border-dashed border-slate-600 hover:border-slate-500"
                   }`}
                   title={selectedAnswer ? "Ketuk untuk mengosongkan" : "Slot kosong"}
                 >
