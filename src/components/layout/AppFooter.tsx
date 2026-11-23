@@ -2,7 +2,9 @@
 
 import React from "react";
 import Image from "next/image";
-import { ExternalLink, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { ExternalLink, Sparkles, ShieldCheck } from "lucide-react";
+import { APP_VERSION } from "@/lib/version";
 
 export function AppFooter({ className = "" }: { className?: string }) {
   return (
@@ -24,7 +26,7 @@ export function AppFooter({ className = "" }: { className?: string }) {
           </span>
           <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/70">
             <Sparkles className="w-2.5 h-2.5 text-emerald-500" />
-            <span>v1.0</span>
+            <span>v{APP_VERSION}</span>
           </span>
         </div>
 
@@ -32,6 +34,31 @@ export function AppFooter({ className = "" }: { className?: string }) {
         <p className="text-xs text-slate-500 font-medium max-w-[280px] leading-relaxed mb-3">
           Platform interaktif untuk menguasai logika pemrograman dan dasar IT sejak dini.
         </p>
+
+        {/* Quick Links Navigasi Cepat */}
+        <div className="flex items-center justify-center gap-3 text-xs font-bold text-slate-600 mb-3 flex-wrap">
+          <Link
+            href="/verify"
+            className="inline-flex items-center gap-1 text-emerald-600 hover:text-emerald-700 transition-colors"
+          >
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Verifikasi Sertifikat</span>
+          </Link>
+          <span className="text-slate-300">•</span>
+          <Link
+            href="/shop"
+            className="hover:text-amber-600 transition-colors"
+          >
+            Toko XP
+          </Link>
+          <span className="text-slate-300">•</span>
+          <Link
+            href="/profile"
+            className="hover:text-indigo-600 transition-colors"
+          >
+            Profil
+          </Link>
+        </div>
 
         {/* Attribution to Core Dev Group */}
         <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-medium pt-3 border-t border-slate-100 w-full justify-center">

@@ -2,10 +2,13 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { MobileShell } from "@/components/layout/MobileShell";
 import { AppFooter } from "@/components/layout/AppFooter";
 import { useUserProgress } from "@/hooks/useUserProgress";
-import { getAllLevels } from "@/data/curriculum";
+import { getAllLevels, CURRICULUM_UNITS } from "@/data/curriculum";
+import { CertificateModal } from "@/components/certificate/CertificateModal";
 import {
   generateStoryShareImage,
   downloadDataUrl,
@@ -23,15 +26,26 @@ import {
   Code2,
   Share2,
   Sparkles,
+  Award,
+  Search,
+  Lock,
+  ShieldCheck,
 } from "lucide-react";
 
 export default function ProfilePage() {
+  const router = useRouter();
   const { progress, resetProgress, isLoaded } = useUserProgress();
   const allLevels = getAllLevels();
 
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  const [selectedCertUnit, setSelectedCertUnit] = useState<{
+    number: number;
+    title: string;
+  } | null>(null);
+  const [lookupCertId, setLookupCertId] = useState("");
+  const [lookupError, setLookupError] = useState("");
 
   const totalLevels = allLevels.length;
   const completedCount = isLoaded ? progress.completedLevels.length : 0;
@@ -59,6 +73,17 @@ export default function ProfilePage() {
     } finally {
       setIsSharing(false);
     }
+  };
+
+  const handleLookupCert = (e: React.FormEvent) => {
+    e.preventDefault();
+    const clean = lookupCertId.trim().toUpperCase();
+    if (!clean) {
+      setLookupError("Silakan masukkan ID Kredensial (contoh: LK-U1-85OW7U)");
+      return;
+    }
+    setLookupError("");
+    router.push(`/verify/${clean}`);
   };
 
   return (
@@ -185,6 +210,151 @@ export default function ProfilePage() {
           </button>
         </section>
 
+        {/* Seksi Sertifikat & Verifikasi Kredensial Resmi */}
+        <section className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs">
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-sm font-black text-slate-800 tracking-tight flex items-center gap-2">
+              <Award className="w-4 h-4 text-amber-500" /> Sertifikat & Kredensial
+            </h2>
+            <Link
+              href="/verify"
+              className="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 inline-flex items-center gap-0.5"
+            >
+              <span>Portal Verifikasi</span>
+              <ExternalLink className="w-3 h-3" />
+            </Link>
+          </div>
+          <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+            Selesaikan seluruh level pada suatu unit untuk mengklaim sertifikat digital resmi ber-QR Code dari <strong>Core Dev Group Academy</strong>.
+          </p>
+
+          {/* Form Pencarian Cepat Kredensial */}
+          <form onSubmit={handleLookupCert} className="mb-4">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={lookupCertId}
+                  onChange={(e) => {
+                    setLookupCertId(e.target.value.toUpperCase());
+                    if (lookupError) setLookupError("");
+                  }}
+                  placeholder="Cek ID: LK-U1-85OW7U"
+                  className="w-full font-mono text-xs font-bold uppercase tracking-wider px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:border-emerald-500 transition-colors placeholder:normal-case placeholder:font-sans placeholder:font-normal placeholder:text-slate-400"
+                />
+              </div>
+              <button
+                type="submit"
+                className="px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 border-b-2 border-emerald-700 active:translate-y-0.5 active:border-b-0 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-xs cursor-pointer select-none transition-all"
+              >
+                <Search className="w-3.5 h-3.5" />
+                <span>Cek</span>
+              </button>
+            </div>
+            {lookupError && (
+              <p className="text-rose-600 text-[11px] font-semibold mt-1">
+                ⚠️ {lookupError}
+              </p>
+            )}
+          </form>
+
+          {/* Daftar Sertifikat per Unit Kurikulum */}
+          <div className="space-y-3">
+            {CURRICULUM_UNITS.map((unit, idx) => {
+              const unitNum = parseInt(unit.id.replace(/\D/g, "")) || idx + 1;
+              const completedLevelsInUnit = unit.levels.filter((l) =>
+                progress.completedLevels.includes(l.id)
+              ).length;
+              const isCompleted =
+                isLoaded &&
+                unit.levels.length > 0 &&
+                completedLevelsInUnit === unit.levels.length;
+              const progressPct = Math.round(
+                (completedLevelsInUnit / unit.levels.length) * 100
+              );
+
+              return (
+                <div
+                  key={unit.id}
+                  className={`rounded-2xl p-3.5 border transition-all ${
+                    isCompleted
+                      ? "bg-gradient-to-r from-amber-50/60 to-emerald-50/60 border-amber-200/80 shadow-2xs"
+                      : "bg-slate-50/70 border-slate-200/70"
+                  }`}
+                >
+                  <div className="flex items-start justify-between gap-2 mb-1.5">
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span
+                          className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                            isCompleted
+                              ? "bg-amber-100 text-amber-800 border border-amber-300"
+                              : "bg-slate-200 text-slate-600"
+                          }`}
+                        >
+                          Unit {unitNum}
+                        </span>
+                        {isCompleted && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full border border-emerald-300">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Tuntas
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-xs font-black text-slate-800 mt-1">
+                        {unit.title}
+                      </h3>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="text-[11px] font-bold text-slate-500">
+                        {completedLevelsInUnit} / {unit.levels.length} Level
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Progress bar jika belum selesai */}
+                  {!isCompleted && (
+                    <div className="mt-2">
+                      <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-emerald-500 rounded-full transition-all duration-300"
+                          style={{ width: `${progressPct}%` }}
+                        />
+                      </div>
+                      <p className="text-[10px] text-slate-400 mt-1.5 flex items-center gap-1 font-medium">
+                        <Lock className="w-3 h-3 text-slate-400" /> Selesaikan {unit.levels.length - completedLevelsInUnit} level lagi untuk membuka sertifikat ini.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Tombol aksi jika tuntas */}
+                  {isCompleted && (
+                    <div className="flex items-center gap-2 mt-3 pt-2.5 border-t border-amber-200/50">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setSelectedCertUnit({ number: unitNum, title: unit.title })
+                        }
+                        className="flex-1 py-2 bg-amber-500 hover:bg-amber-600 active:translate-y-0.5 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer select-none border-b-2 border-amber-700 active:border-b-0 transition-all"
+                      >
+                        <Award className="w-3.5 h-3.5" />
+                        <span>Klaim / Unduh Sertifikat</span>
+                      </button>
+                      <Link
+                        href="/verify"
+                        className="px-3 py-2 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-bold text-xs flex items-center gap-1 transition-colors shadow-2xs shrink-0"
+                        title="Buka halaman verifikasi untuk mengecek keaslian ID kredensial"
+                      >
+                        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Verifikasi</span>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
         {/* Kartu Branding Resmi Core Dev Group (WAJIB) */}
         <section className="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-3xl p-5 shadow-sm border border-slate-700">
           <div className="flex items-center gap-2 mb-2">
@@ -270,6 +440,16 @@ export default function ProfilePage() {
         {/* Footer Branding Resmi Core Dev Group */}
         <AppFooter className="mt-2 mb-0" />
       </div>
+
+      {/* Modal Klaim / Unduh Sertifikat */}
+      {selectedCertUnit && (
+        <CertificateModal
+          isOpen={true}
+          onClose={() => setSelectedCertUnit(null)}
+          unitNumber={selectedCertUnit.number}
+          unitTitle={selectedCertUnit.title}
+        />
+      )}
     </MobileShell>
   );
 }
