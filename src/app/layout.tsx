@@ -45,7 +45,9 @@ export const metadata: Metadata = {
     "Koding Pemula",
   ],
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    google:
+      process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+      "W0BaV53sZ9C7d0x3FCA30-apufMkGXpdzmZB7jHjjrQ",
   },
   openGraph: {
     title: "LogiKode — Belajar Logika Koding & Dasar IT",
