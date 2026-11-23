@@ -134,4 +134,18 @@ describe("Lynk.id Webhooks & Upstash Redis Voucher Verification", () => {
     expect(data2.success).toBe(false);
     expect(data2.message).toContain("SUDAH PERNAH DIKLAIM");
   });
+
+  it("harus merespons 200 OK untuk tombol Test URL dari dashboard Lynk.id", async () => {
+    const testReq = new NextRequest(
+      "http://localhost:3000/api/webhooks/lynkid",
+      {
+        method: "POST",
+        body: JSON.stringify({}),
+      }
+    );
+    const res = await webhookPost(testReq);
+    const data = await res.json();
+    expect(res.status).toBe(200);
+    expect(data.success).toBe(true);
+  });
 });

@@ -42,10 +42,11 @@ export async function POST(req: NextRequest) {
     ).trim();
 
     if (!rawOrderId) {
-      return NextResponse.json(
-        { error: "Order ID tidak ditemukan dalam payload" },
-        { status: 400 }
-      );
+      // Jika ini adalah ping verifikasi atau tombol "Test URL" dari dashboard Lynk.id
+      return NextResponse.json({
+        success: true,
+        message: "Lynk.id webhook endpoint is active. Test ping received.",
+      });
     }
 
     const cleanOrderId = rawOrderId.replace(/^#+/, "").trim().toUpperCase();
