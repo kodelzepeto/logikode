@@ -30,7 +30,9 @@ export const metadata: Metadata = {
   authors: [{ name: "Core Dev Group", url: "https://core-dev-group.my.id" }],
   creator: "Core Dev Group",
   publisher: "Core Dev Group",
-  metadataBase: new URL("https://core-dev-group.my.id"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://logi-kode.vercel.app"
+  ),
   keywords: [
     "LogiKode",
     "Belajar Koding",
@@ -42,11 +44,14 @@ export const metadata: Metadata = {
     "Kuis Algoritma",
     "Koding Pemula",
   ],
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
   openGraph: {
     title: "LogiKode — Belajar Logika Koding & Dasar IT",
     description:
       "Platform belajar logika koding interaktif mobile-first berbahasa Indonesia bergaya Duolingo oleh Core Dev Group.",
-    url: "https://core-dev-group.my.id",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://logi-kode.vercel.app",
     siteName: "LogiKode",
     locale: "id_ID",
     type: "website",
