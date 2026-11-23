@@ -215,7 +215,7 @@ export async function generateStoryShareImage(
 }
 
 /**
- * Menghasilkan Sertifikat Digital Kelulusan Unit (1600x1130 PNG) bergaya formal modern.
+ * Menghasilkan Sertifikat Digital Kelulusan Unit (1600x1130 PNG) berdesain prestisius & formal.
  */
 export async function generateUnitCertificate(
   params: UnitCertificateParams
@@ -232,145 +232,440 @@ export async function generateUnitCertificate(
     throw new Error("Gagal menginisialisasi 2D Canvas context");
   }
 
-  // 1. Background Dasar Mewah (Slate Gelap)
-  const bgGrad = ctx.createLinearGradient(0, 0, width, height);
-  bgGrad.addColorStop(0, "#0b0f19");
-  bgGrad.addColorStop(0.5, "#0f172a");
-  bgGrad.addColorStop(1, "#111827");
+  // 1. Background Dasar Mewah (Obsidian & Royal Navy Radial Glow)
+  const bgGrad = ctx.createRadialGradient(
+    width / 2,
+    height / 2,
+    80,
+    width / 2,
+    height / 2,
+    850
+  );
+  bgGrad.addColorStop(0, "#0c1527");
+  bgGrad.addColorStop(0.5, "#080e1a");
+  bgGrad.addColorStop(1, "#04070e");
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, width, height);
 
-  // 2. Bingkai Emas & Emerald Ornate (Double Border)
+  // 1b. Pola Guilloche / Watermark Geometris Lembut di Pusat
   ctx.save();
-  ctx.strokeStyle = "#eab308"; // Gold
-  ctx.lineWidth = 8;
-  ctx.strokeRect(40, 40, width - 80, height - 80);
-
-  ctx.strokeStyle = "#10b981"; // Emerald
-  ctx.lineWidth = 3;
-  ctx.strokeRect(55, 55, width - 110, height - 110);
+  ctx.lineWidth = 1;
+  const rings = [160, 220, 280, 340, 400];
+  rings.forEach((r, idx) => {
+    ctx.strokeStyle =
+      idx % 2 === 0
+        ? "rgba(234, 179, 8, 0.03)"
+        : "rgba(16, 185, 129, 0.035)";
+    ctx.beginPath();
+    ctx.arc(width / 2, height / 2 - 30, r, 0, Math.PI * 2);
+    ctx.stroke();
+  });
   ctx.restore();
 
-  // Ornamen Sudut Emas
-  const corners = [
-    [70, 70],
-    [width - 70, 70],
-    [70, height - 70],
-    [width - 70, height - 70],
-  ];
-  ctx.fillStyle = "#eab308";
-  corners.forEach(([cx, cy]) => {
-    ctx.beginPath();
-    ctx.arc(cx, cy, 10, 0, Math.PI * 2);
-    ctx.fill();
-  });
+  // 2. Bingkai Emas & Emerald Ornate (Triple Luxury Frame)
+  ctx.save();
+  // Bingkai Luar Emas
+  ctx.strokeStyle = "#d97706";
+  ctx.lineWidth = 4;
+  ctx.strokeRect(38, 38, width - 76, height - 76);
 
-  // 3. Header Ribbon / Institusi
-  ctx.fillStyle = "#10b981";
-  ctx.font = "bold 28px sans-serif";
+  // Bingkai Tipis Tengah
+  ctx.strokeStyle = "rgba(234, 179, 8, 0.4)";
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(48, 48, width - 96, height - 96);
+
+  // Bingkai Dalam Emerald
+  ctx.strokeStyle = "#10b981";
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(60, 60, width - 120, height - 120);
+
+  // Garis Halus Inset
+  ctx.strokeStyle = "rgba(148, 163, 184, 0.2)";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(70, 70, width - 140, height - 140);
+  ctx.restore();
+
+  // Ornamen Berlian Emas di Sudut (4 Corners)
+  const drawCornerDiamond = (cx: number, cy: number) => {
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - 12);
+    ctx.lineTo(cx + 12, cy);
+    ctx.lineTo(cx, cy + 12);
+    ctx.lineTo(cx - 12, cy);
+    ctx.closePath();
+    ctx.fillStyle = "#eab308";
+    ctx.fill();
+    ctx.strokeStyle = "#fef08a";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Titik Pusat
+    ctx.beginPath();
+    ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+    ctx.fillStyle = "#0f172a";
+    ctx.fill();
+    ctx.restore();
+  };
+
+  const corners = [
+    [60, 60],
+    [width - 60, 60],
+    [60, height - 60],
+    [width - 60, height - 60],
+  ];
+  corners.forEach(([cx, cy]) => drawCornerDiamond(cx, cy));
+
+  // 3. Header Institusi
   ctx.textAlign = "center";
-  ctx.letterSpacing = "4px";
-  ctx.fillText("★ CORE DEV GROUP ACADEMY ★", width / 2, 140);
+  ctx.fillStyle = "#10b981";
+  ctx.font = "bold 22px sans-serif";
+  ctx.letterSpacing = "5px";
+  ctx.fillText("★  CORE DEV GROUP ACADEMY  ★", width / 2, 128);
+
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "bold 13px sans-serif";
+  ctx.letterSpacing = "3px";
+  ctx.fillText(
+    "LEMBAGA PENGEMBANGAN LOGIKA & DASAR IT INDONESIA",
+    width / 2,
+    154
+  );
 
   // 4. Judul Sertifikat Utama
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "900 64px serif";
+  ctx.fillStyle = "#f8fafc";
+  ctx.font = "900 58px serif";
+  ctx.letterSpacing = "2px";
   ctx.fillText("SERTIFIKAT KELULUSAN", width / 2, 230);
 
-  // Garis Emas di Bawah Judul
-  ctx.strokeStyle = "#eab308";
-  ctx.lineWidth = 4;
+  ctx.fillStyle = "#eab308";
+  ctx.font = "bold 16px sans-serif";
+  ctx.letterSpacing = "4px";
+  ctx.fillText("CERTIFICATE OF COMPLETION & EXCELLENCE", width / 2, 262);
+
+  // Garis Emas Hiasan dengan Berlian di Tengah
+  ctx.save();
+  ctx.strokeStyle = "rgba(234, 179, 8, 0.7)";
+  ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.moveTo(width / 2 - 250, 260);
-  ctx.lineTo(width / 2 + 250, 260);
+  ctx.moveTo(width / 2 - 240, 285);
+  ctx.lineTo(width / 2 - 18, 285);
   ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(width / 2 + 18, 285);
+  ctx.lineTo(width / 2 + 240, 285);
+  ctx.stroke();
+
+  // Mini Diamond di tengah garis
+  ctx.beginPath();
+  ctx.moveTo(width / 2, 285 - 6);
+  ctx.lineTo(width / 2 + 6, 285);
+  ctx.lineTo(width / 2, 285 + 6);
+  ctx.lineTo(width / 2 - 6, 285);
+  ctx.closePath();
+  ctx.fillStyle = "#eab308";
+  ctx.fill();
+  ctx.restore();
 
   // 5. Pernyataan Penyerahan
   ctx.fillStyle = "#94a3b8";
-  ctx.font = "italic 28px serif";
-  ctx.fillText("Diberikan dengan penuh apresiasi dan kehormatan kepada:", width / 2, 330);
-
-  // 6. Nama Pelajar (Sangat Menonjol)
-  ctx.fillStyle = "#f8fafc";
-  ctx.font = "900 68px sans-serif";
-  const displayName = params.studentName.trim() || "Pelajar Hebat";
-  ctx.fillText(displayName, width / 2, 440);
-
-  // Garis Bawah Nama
-  const textWidth = ctx.measureText(displayName).width;
-  ctx.strokeStyle = "rgba(16, 185, 129, 0.8)";
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(width / 2 - Math.max(250, textWidth / 2 + 30), 470);
-  ctx.lineTo(width / 2 + Math.max(250, textWidth / 2 + 30), 470);
-  ctx.stroke();
-
-  // 7. Deskripsi Pencapaian
-  ctx.fillStyle = "#cbd5e1";
-  ctx.font = "26px sans-serif";
+  ctx.font = "italic 24px serif";
+  ctx.letterSpacing = "0px";
   ctx.fillText(
-    "Atas keberhasilannya menuntaskan seluruh materi kurikulum dan tantangan logika pemrograman pada:",
+    "Diberikan dengan penuh apresiasi dan kehormatan kepada:",
     width / 2,
-    550
+    340
   );
 
-  // 8. Nama Unit yang Dituntaskan (Badge Mewah)
+  // 6. Nama Pelajar (Besar, Jelas, Menonjol)
+  const displayName = params.studentName.trim() || "Pelajar Hebat";
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 64px sans-serif";
+  ctx.letterSpacing = "1.5px";
+  ctx.fillText(displayName.toUpperCase(), width / 2, 428);
+
+  // Garis Bawah Nama dengan Gradasi
+  const textW = Math.max(
+    340,
+    ctx.measureText(displayName.toUpperCase()).width + 60
+  );
+  const nameLineGrad = ctx.createLinearGradient(
+    width / 2 - textW / 2,
+    0,
+    width / 2 + textW / 2,
+    0
+  );
+  nameLineGrad.addColorStop(0, "rgba(16, 185, 129, 0)");
+  nameLineGrad.addColorStop(0.2, "rgba(16, 185, 129, 0.8)");
+  nameLineGrad.addColorStop(0.5, "rgba(234, 179, 8, 0.9)");
+  nameLineGrad.addColorStop(0.8, "rgba(16, 185, 129, 0.8)");
+  nameLineGrad.addColorStop(1, "rgba(16, 185, 129, 0)");
+  ctx.strokeStyle = nameLineGrad;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(width / 2 - textW / 2, 452);
+  ctx.lineTo(width / 2 + textW / 2, 452);
+  ctx.stroke();
+
+  // 7. Deskripsi Pencapaian (Dua Baris Rapi, TIDAK MELEBAR ke Garis Tepi)
+  ctx.fillStyle = "#cbd5e1";
+  ctx.font = "22px sans-serif";
+  ctx.letterSpacing = "0.5px";
+  ctx.fillText(
+    "Atas dedikasi dan keberhasilannya menyelesaikan seluruh materi kurikulum,",
+    width / 2,
+    512
+  );
+  ctx.fillText(
+    "kuis interaktif, serta tantangan penalaran logika pemrograman komputer pada:",
+    width / 2,
+    546
+  );
+
+  // 8. Nama Unit yang Dituntaskan (Badge Mewah & TIDAK REDUNDAN)
+  // Menghilangkan duplikasi kata 'Unit X:' jika unitTitle sudah memilikinya
+  const cleanUnitTitle = params.unitTitle
+    .replace(/^unit\s*\d+[\s:\-–—]+/i, "")
+    .trim();
+  const unitLabel = `UNIT ${params.unitNumber}: ${cleanUnitTitle.toUpperCase()}`;
+
   ctx.save();
-  const unitBoxW = 900;
-  const unitBoxH = 110;
-  roundRect(ctx, width / 2 - unitBoxW / 2, 600, unitBoxW, unitBoxH, 24);
-  const unitGrad = ctx.createLinearGradient(0, 600, 0, 710);
+  const unitBoxW = 940;
+  const unitBoxH = 96;
+  const unitBoxX = width / 2 - unitBoxW / 2;
+  const unitBoxY = 595;
+  roundRect(ctx, unitBoxX, unitBoxY, unitBoxW, unitBoxH, 20);
+
+  const unitGrad = ctx.createLinearGradient(
+    0,
+    unitBoxY,
+    0,
+    unitBoxY + unitBoxH
+  );
   unitGrad.addColorStop(0, "rgba(16, 185, 129, 0.2)");
-  unitGrad.addColorStop(1, "rgba(6, 182, 212, 0.1)");
+  unitGrad.addColorStop(1, "rgba(6, 182, 212, 0.08)");
   ctx.fillStyle = unitGrad;
-  ctx.strokeStyle = "rgba(16, 185, 129, 0.5)";
+  ctx.strokeStyle = "rgba(234, 179, 8, 0.6)";
   ctx.lineWidth = 2;
   ctx.fill();
+  ctx.stroke();
+
+  // Mini Pill Tag di atas kotak unit
+  const tagW = 230;
+  const tagH = 24;
+  roundRect(ctx, width / 2 - tagW / 2, unitBoxY - 12, tagW, tagH, 12);
+  ctx.fillStyle = "#064e3b";
+  ctx.strokeStyle = "#10b981";
+  ctx.lineWidth = 1.5;
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = "#34d399";
+  ctx.font = "bold 11px sans-serif";
+  ctx.letterSpacing = "2px";
+  ctx.fillText("KOMPETENSI TERCAPAI", width / 2, unitBoxY + 4);
+
+  // Teks Judul Unit
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "900 32px sans-serif";
+  ctx.letterSpacing = "1px";
+  ctx.fillText(unitLabel, width / 2, unitBoxY + 58);
+  ctx.restore();
+
+  // 9. Medali Segel Emas / Golden Rosette Seal Resmi (Tengah Bawah)
+  const sealX = width / 2;
+  const sealY = 825;
+
+  ctx.save();
+  // Pita Segel Bawah (Ribbons)
+  // Pita Kiri
+  ctx.beginPath();
+  ctx.moveTo(sealX - 25, sealY + 25);
+  ctx.lineTo(sealX - 45, sealY + 85);
+  ctx.lineTo(sealX - 28, sealY + 75);
+  ctx.lineTo(sealX - 10, sealY + 85);
+  ctx.lineTo(sealX - 12, sealY + 30);
+  ctx.closePath();
+  ctx.fillStyle = "#047857";
+  ctx.fill();
+  ctx.strokeStyle = "#eab308";
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Pita Kanan
+  ctx.beginPath();
+  ctx.moveTo(sealX + 12, sealY + 30);
+  ctx.lineTo(sealX + 10, sealY + 85);
+  ctx.lineTo(sealX + 28, sealY + 75);
+  ctx.lineTo(sealX + 45, sealY + 85);
+  ctx.lineTo(sealX + 25, sealY + 25);
+  ctx.closePath();
+  ctx.fillStyle = "#047857";
+  ctx.fill();
+  ctx.strokeStyle = "#eab308";
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Gerigi Medali (Rosette 16 Points)
+  const numTeeth = 16;
+  const outerRadius = 52;
+  const innerRadius = 45;
+  ctx.beginPath();
+  for (let i = 0; i < numTeeth * 2; i++) {
+    const r = i % 2 === 0 ? outerRadius : innerRadius;
+    const angle = (i * Math.PI) / numTeeth;
+    const x = sealX + r * Math.cos(angle);
+    const y = sealY + r * Math.sin(angle);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  const sealGrad = ctx.createRadialGradient(
+    sealX,
+    sealY,
+    10,
+    sealX,
+    sealY,
+    outerRadius
+  );
+  sealGrad.addColorStop(0, "#fef08a");
+  sealGrad.addColorStop(0.6, "#eab308");
+  sealGrad.addColorStop(1, "#b45309");
+  ctx.fillStyle = sealGrad;
+  ctx.fill();
+  ctx.strokeStyle = "#fef9c3";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Lingkaran Dalam Segel
+  ctx.beginPath();
+  ctx.arc(sealX, sealY, 36, 0, Math.PI * 2);
+  ctx.fillStyle = "#0f172a";
+  ctx.fill();
+  ctx.strokeStyle = "#eab308";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Teks Dalam Segel
+  ctx.fillStyle = "#eab308";
+  ctx.font = "bold 10px sans-serif";
+  ctx.letterSpacing = "1px";
+  ctx.fillText("★ RESMI ★", sealX, sealY - 12);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "900 12px sans-serif";
+  ctx.letterSpacing = "1.5px";
+  ctx.fillText("VERIFIED", sealX, sealY + 4);
+
+  ctx.fillStyle = "#34d399";
+  ctx.font = "bold 10px sans-serif";
+  ctx.letterSpacing = "1px";
+  ctx.fillText("CORE DEV", sealX, sealY + 18);
+  ctx.restore();
+
+  // 10. Kolom Kiri: Verifikasi & Tanggal
+  const credId = `LK-U${params.unitNumber}-${Math.abs(hashString(displayName + params.unitTitle)).toString(36).toUpperCase().padStart(6, "0")}`;
+
+  ctx.textAlign = "left";
+  ctx.letterSpacing = "1px";
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "bold 13px sans-serif";
+  ctx.fillText("TANGGAL KELULUSAN:", 160, 785);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 24px sans-serif";
+  ctx.fillText(params.dateStr, 160, 818);
+
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "bold 13px sans-serif";
+  ctx.fillText("NO. KREDENSIAL VERIFIKASI:", 160, 868);
+
+  // Badge Kredensial Monospace
+  roundRect(ctx, 160, 882, 240, 36, 10);
+  ctx.fillStyle = "#0f172a";
+  ctx.strokeStyle = "rgba(56, 189, 248, 0.4)";
+  ctx.lineWidth = 1.5;
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = "#38bdf8";
+  ctx.font = "bold 16px monospace";
+  ctx.fillText(credId, 175, 906);
+
+  ctx.fillStyle = "#10b981";
+  ctx.font = "bold 12px sans-serif";
+  ctx.fillText("● Status: Terverifikasi Digital Resmi", 160, 942);
+
+  // 11. Kolom Kanan: Tanda Tangan & Penerbit
+  ctx.textAlign = "right";
+  ctx.letterSpacing = "1px";
+  ctx.fillStyle = "#94a3b8";
+  ctx.font = "bold 13px sans-serif";
+  ctx.fillText("DITERBITKAN OLEH:", width - 160, 785);
+
+  // Simulasi Tanda Tangan Digital Grafis (Cursive Bezier Curve)
+  ctx.save();
+  ctx.strokeStyle = "#34d399";
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  const sigX = width - 360;
+  const sigY = 825;
+  ctx.moveTo(sigX + 20, sigY);
+  ctx.bezierCurveTo(
+    sigX + 50,
+    sigY - 25,
+    sigX + 70,
+    sigY + 20,
+    sigX + 110,
+    sigY - 15
+  );
+  ctx.bezierCurveTo(
+    sigX + 140,
+    sigY - 35,
+    sigX + 130,
+    sigY + 15,
+    sigX + 170,
+    sigY - 5
+  );
+  ctx.bezierCurveTo(sigX + 185, sigY + 5, sigX + 195, sigY - 15, sigX + 215, sigY);
+  ctx.stroke();
+
+  // Garis Bawah Tanda Tangan
+  ctx.strokeStyle = "rgba(148, 163, 184, 0.4)";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(width - 360, 842);
+  ctx.lineTo(width - 160, 842);
   ctx.stroke();
   ctx.restore();
 
   ctx.fillStyle = "#ffffff";
-  ctx.font = "900 38px sans-serif";
-  ctx.fillText(`UNIT ${params.unitNumber}: ${params.unitTitle.toUpperCase()}`, width / 2, 668);
-
-  // 9. Informasi Kelulusan & Tanda Tangan
-  const credId = `LK-${params.unitNumber}-${Math.abs(hashString(displayName + params.unitTitle)).toString(36).toUpperCase()}`;
-
-  // Kiri: Tanggal
-  ctx.textAlign = "left";
-  ctx.fillStyle = "#94a3b8";
-  ctx.font = "22px sans-serif";
-  ctx.fillText("Tanggal Selesai:", 160, 840);
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 26px sans-serif";
-  ctx.fillText(params.dateStr, 160, 875);
-
-  ctx.fillStyle = "#64748b";
-  ctx.font = "20px monospace";
-  ctx.fillText(`ID: ${credId}`, 160, 915);
-
-  // Kanan: Penerbit & Tanda Tangan
-  ctx.textAlign = "right";
-  ctx.fillStyle = "#94a3b8";
-  ctx.font = "22px sans-serif";
-  ctx.fillText("Diterbitkan Oleh:", width - 160, 840);
+  ctx.font = "bold 18px sans-serif";
+  ctx.fillText("DEWAN PENILAI AKADEMIK", width - 160, 870);
 
   ctx.fillStyle = "#10b981";
-  ctx.font = "bold 32px sans-serif";
-  ctx.fillText("Core Dev Group", width - 160, 880);
+  ctx.font = "bold 15px sans-serif";
+  ctx.fillText("Core Dev Group", width - 160, 895);
 
   ctx.fillStyle = "#64748b";
-  ctx.font = "20px sans-serif";
-  ctx.fillText("https://core-dev-group.my.id", width - 160, 915);
+  ctx.font = "13px sans-serif";
+  ctx.fillText("https://core-dev-group.my.id", width - 160, 918);
 
-  // 10. Watermark Bawah
+  ctx.fillStyle = "#475569";
+  ctx.font = "italic 11px sans-serif";
+  ctx.fillText("Platform Belajar Logika Koding Modal Rp 0", width - 160, 938);
+
+  // 12. Watermark & Legal Bawah
   ctx.textAlign = "center";
   ctx.fillStyle = "#475569";
-  ctx.font = "18px sans-serif";
+  ctx.font = "13px sans-serif";
+  ctx.letterSpacing = "0.5px";
   ctx.fillText(
-    "LogiKode Platform — Didukung oleh Core Dev Group. Terverifikasi secara digital & bebas biaya.",
+    "LogiKode Platform — Didukung oleh Core Dev Group (core-dev-group.my.id). Terverifikasi secara digital & bebas biaya untuk pelajar.",
     width / 2,
-    1030
+    1042
   );
 
   return canvas.toDataURL("image/png");
