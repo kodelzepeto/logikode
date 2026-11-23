@@ -10,6 +10,7 @@ import {
   generateStoryShareImage,
   downloadDataUrl,
 } from "@/lib/canvasGenerator";
+import { APP_VERSION, getAppVersionBadge } from "@/lib/version";
 import {
   Flame,
   Zap,
@@ -82,9 +83,15 @@ export default function ProfilePage() {
             <p className="text-xs text-slate-500 font-medium">
               Mode Belajar Tanpa Login (Penyimpanan Lokal)
             </p>
-            <span className="inline-flex items-center gap-1 mt-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
-              <CheckCircle2 className="w-3 h-3" /> Akun Aktif
-            </span>
+            <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
+                <CheckCircle2 className="w-3 h-3" /> Akun Aktif
+              </span>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200 font-mono">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                v{APP_VERSION}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -251,6 +258,14 @@ export default function ProfilePage() {
             </div>
           )}
         </section>
+
+        {/* Badge Versi Aplikasi Resmi */}
+        <div className="flex items-center justify-center -mt-1 mb-0">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200/90 text-slate-500 text-[11px] font-bold font-mono select-none">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            <span>{getAppVersionBadge()}</span>
+          </div>
+        </div>
 
         {/* Footer Branding Resmi Core Dev Group */}
         <AppFooter className="mt-2 mb-0" />
