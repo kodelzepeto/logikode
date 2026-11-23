@@ -9,6 +9,7 @@ import { UnitBanner } from "./UnitBanner";
 import { LevelNode, LevelStatus } from "./LevelNode";
 import { Level } from "@/types/curriculum";
 import { Lock, X, ArrowRight } from "lucide-react";
+import { AppFooter } from "@/components/layout/AppFooter";
 
 export function LearningPath() {
   const { progress } = useUserProgress();
@@ -149,22 +150,7 @@ export function LearningPath() {
       )}
 
       {/* Footer Branding Resmi Core Dev Group */}
-      <footer className="mt-8 mb-4 text-center">
-        <p className="text-xs text-slate-400 font-medium">
-          Dibangun dengan ❤️ oleh{" "}
-          <a
-            href="https://core-dev-group.my.id"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-bold text-emerald-600 hover:underline"
-          >
-            Core Dev Group
-          </a>
-        </p>
-        <p className="text-[10px] text-slate-400 mt-0.5">
-          Platform Belajar Logika Koding Modal Rp 0 untuk Pelajar Indonesia
-        </p>
-      </footer>
+      <AppFooter />
     </div>
   );
 }

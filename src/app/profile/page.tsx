@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { MobileShell } from "@/components/layout/MobileShell";
+import { AppFooter } from "@/components/layout/AppFooter";
 import { useUserProgress } from "@/hooks/useUserProgress";
 import { getAllLevels } from "@/data/curriculum";
 import {
@@ -250,6 +251,9 @@ export default function ProfilePage() {
             </div>
           )}
         </section>
+
+        {/* Footer Branding Resmi Core Dev Group */}
+        <AppFooter className="mt-2 mb-0" />
       </div>
     </MobileShell>
   );

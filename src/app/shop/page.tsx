@@ -6,6 +6,7 @@ import { useUserProgress } from "@/hooks/useUserProgress";
 import { isUnlimitedHeartsActive } from "@/lib/gamification";
 import { QrisPaymentModal, QrisItemInfo } from "@/components/shop/QrisPaymentModal";
 import { VoucherRedeemCard } from "@/components/shop/VoucherRedeemCard";
+import { AppFooter } from "@/components/layout/AppFooter";
 import {
   ShoppingBag,
   Snowflake,
@@ -282,23 +283,8 @@ export default function ShopPage() {
           item={activeQrisItem}
         />
 
-        {/* Footer Branding Resmi Core Dev Group (WAJIB) */}
-        <footer className="mt-4 mb-2 text-center">
-          <p className="text-xs text-slate-400 font-medium">
-            Built with ❤️ by{" "}
-            <a
-              href="https://core-dev-group.my.id"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-bold text-emerald-600 hover:underline"
-            >
-              Core Dev Group
-            </a>
-          </p>
-          <p className="text-[10px] text-slate-400 mt-0.5">
-            Solusi Belajar Logika Koding Modal Rp 0 untuk Generasi Muda Indonesia
-          </p>
-        </footer>
+        {/* Footer Branding Resmi Core Dev Group */}
+        <AppFooter className="mt-2 mb-0" />
       </div>
     </MobileShell>
   );
