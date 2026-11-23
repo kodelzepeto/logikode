@@ -2,10 +2,12 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Award, Download, Sparkles, CheckCircle2 } from "lucide-react";
+import { X, Award, Download, Sparkles, CheckCircle2, ExternalLink } from "lucide-react";
+import Link from "next/link";
 import {
   generateUnitCertificate,
   downloadDataUrl,
+  computeCertificateId,
 } from "@/lib/canvasGenerator";
 
 interface CertificateModalProps {
@@ -24,6 +26,7 @@ export function CertificateModal({
   const [studentName, setStudentName] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isDone, setIsDone] = useState(false);
+  const [registeredCertId, setRegisteredCertId] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -39,6 +42,26 @@ export function CertificateModal({
         month: "long",
         year: "numeric",
       });
+
+      const credId = computeCertificateId(
+        studentName.trim(),
+        unitNumber,
+        unitTitle
+      );
+      setRegisteredCertId(credId);
+
+      // Daftarkan ke API registry cloud (Upstash Redis)
+      await fetch("/api/certificates/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: credId,
+          studentName: studentName.trim(),
+          unitNumber,
+          unitTitle,
+          dateStr,
+        }),
+      }).catch((err) => console.warn("Offline cert register fallback:", err));
 
       const dataUrl = await generateUnitCertificate({
         studentName: studentName.trim(),
@@ -113,9 +136,26 @@ export function CertificateModal({
             </div>
 
             {isDone && (
-              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
-                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
-                <span>Sertifikat berhasil diunduh ke perangkatmu! 🏆</span>
+              <div className="flex flex-col gap-2 p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs">
+                <div className="flex items-center gap-1.5 font-bold text-emerald-800">
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
+                  <span>Sertifikat berhasil diunduh ke perangkatmu! 🏆</span>
+                </div>
+                {registeredCertId && (
+                  <div className="flex items-center justify-between pt-1 border-t border-emerald-200/60 text-[11px]">
+                    <span className="font-mono text-slate-600 font-semibold">
+                      ID: {registeredCertId}
+                    </span>
+                    <Link
+                      href={`/verify/${registeredCertId}`}
+                      target="_blank"
+                      className="inline-flex items-center gap-1 font-bold text-emerald-700 hover:text-emerald-900 underline"
+                    >
+                      <span>Cek Verifikasi</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
 

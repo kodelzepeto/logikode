@@ -4,6 +4,8 @@
  * dan Sertifikat Digital Kelulusan Unit (1600x1130).
  */
 
+import QRCode from "qrcode";
+
 export interface StoryShareParams {
   streak: number;
   xp: number;
@@ -212,6 +214,23 @@ export async function generateStoryShareImage(
   ctx.fillText("Belajar Logika Koding Gratis di Vercel", width / 2, 1765);
 
   return canvas.toDataURL("image/png");
+}
+
+/**
+ * Helper menghitung ID Kredensial Sertifikat yang konsisten secara deterministik.
+ */
+export function computeCertificateId(
+  displayName: string,
+  unitNumber: number,
+  unitTitle: string
+): string {
+  const hash = Math.abs(
+    hashString(displayName.trim().toUpperCase() + unitTitle)
+  )
+    .toString(36)
+    .toUpperCase()
+    .padStart(6, "0");
+  return `LK-U${unitNumber}-${hash}`;
 }
 
 /**
@@ -564,38 +583,83 @@ export async function generateUnitCertificate(
   ctx.fillText("CORE DEV", sealX, sealY + 18);
   ctx.restore();
 
-  // 10. Kolom Kiri: Verifikasi & Tanggal
-  const credId = `LK-U${params.unitNumber}-${Math.abs(hashString(displayName + params.unitTitle)).toString(36).toUpperCase().padStart(6, "0")}`;
+  // 10. Kolom Kiri: Verifikasi, QR Code & Tanggal
+  const credId = computeCertificateId(
+    displayName,
+    params.unitNumber,
+    params.unitTitle
+  );
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://logi-kode.vercel.app";
+  const verifyUrl = `${baseUrl}/verify/${credId}`;
 
   ctx.textAlign = "left";
   ctx.letterSpacing = "1px";
   ctx.fillStyle = "#94a3b8";
   ctx.font = "bold 13px sans-serif";
-  ctx.fillText("TANGGAL KELULUSAN:", 160, 785);
+  ctx.fillText("TANGGAL KELULUSAN:", 160, 775);
 
   ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 24px sans-serif";
-  ctx.fillText(params.dateStr, 160, 818);
+  ctx.font = "bold 22px sans-serif";
+  ctx.fillText(params.dateStr, 160, 804);
 
-  ctx.fillStyle = "#94a3b8";
-  ctx.font = "bold 13px sans-serif";
-  ctx.fillText("NO. KREDENSIAL VERIFIKASI:", 160, 868);
+  // Render QR Code resmi di Canvas
+  try {
+    const qrDataUrl = await QRCode.toDataURL(verifyUrl, {
+      width: 140,
+      margin: 1,
+      color: {
+        dark: "#0f172a",
+        light: "#ffffff",
+      },
+    });
 
-  // Badge Kredensial Monospace
-  roundRect(ctx, 160, 882, 240, 36, 10);
-  ctx.fillStyle = "#0f172a";
-  ctx.strokeStyle = "rgba(56, 189, 248, 0.4)";
-  ctx.lineWidth = 1.5;
-  ctx.fill();
-  ctx.stroke();
+    const qrImage = await new Promise<HTMLImageElement | null>((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(null);
+      img.src = qrDataUrl;
+    });
 
-  ctx.fillStyle = "#38bdf8";
-  ctx.font = "bold 16px monospace";
-  ctx.fillText(credId, 175, 906);
+    if (qrImage) {
+      // Kotak pembungkus QR Code dengan aksen emas
+      roundRect(ctx, 160, 826, 108, 108, 12);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+      ctx.strokeStyle = "#eab308";
+      ctx.lineWidth = 2;
+      ctx.stroke();
 
-  ctx.fillStyle = "#10b981";
-  ctx.font = "bold 12px sans-serif";
-  ctx.fillText("● Status: Terverifikasi Digital Resmi", 160, 942);
+      ctx.drawImage(qrImage, 164, 830, 100, 100);
+
+      // Keterangan di sebelah kanan QR Code
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "bold 11px sans-serif";
+      ctx.fillText("SCAN VERIFIKASI RESMI:", 282, 846);
+
+      // Badge Kredensial Monospace
+      roundRect(ctx, 282, 856, 180, 32, 8);
+      ctx.fillStyle = "#0f172a";
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.4)";
+      ctx.lineWidth = 1.5;
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = "#38bdf8";
+      ctx.font = "bold 14px monospace";
+      ctx.fillText(credId, 292, 877);
+
+      ctx.fillStyle = "#10b981";
+      ctx.font = "bold 11px sans-serif";
+      ctx.fillText("● Status: Terverifikasi Digital di Vercel", 282, 908);
+
+      ctx.fillStyle = "#64748b";
+      ctx.font = "11px sans-serif";
+      ctx.fillText("https://core-dev-group.my.id", 282, 928);
+    }
+  } catch (err) {
+    console.warn("Gagal merender QR Code:", err);
+  }
 
   // 11. Kolom Kanan: Tanda Tangan & Penerbit
   ctx.textAlign = "right";
