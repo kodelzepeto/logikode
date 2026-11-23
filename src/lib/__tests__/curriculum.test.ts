@@ -119,6 +119,55 @@ describe("Curriculum Data Validation", () => {
         }
       }
     });
+
+    it("tipe multiple_choice tidak boleh selalu menaruh kunci jawaban di pilihan pertama (harus acak/bervariasi)", () => {
+      const correctIndices: number[] = [];
+      for (const level of allLevels) {
+        for (const question of level.questions) {
+          if (question.type === "multiple_choice") {
+            const mc = question as MultipleChoiceQuestion;
+            correctIndices.push(mc.correctIndex);
+          }
+        }
+      }
+
+      // Kunci jawaban harus bervariasi di index 0, 1, 2, atau 3 (A, B, C, D)
+      const uniqueIndices = new Set(correctIndices);
+      expect(uniqueIndices.size).toBeGreaterThanOrEqual(3);
+      // Pilihan index 0 (A) tidak boleh mendominasi seluruh soal (> 40%)
+      const index0Count = correctIndices.filter((idx) => idx === 0).length;
+      expect(index0Count / correctIndices.length).toBeLessThan(0.4);
+    });
+
+    it("tipe code_order harus memiliki kepingan blocks yang teracak (tidak boleh sudah tersusun sama dengan correctOrder)", () => {
+      for (const level of allLevels) {
+        for (const question of level.questions) {
+          if (question.type === "code_order") {
+            const co = question as CodeOrderQuestion;
+            // Blocks harus teracak, tidak boleh langsung sama dengan correctOrder
+            expect(
+              co.blocks,
+              `Soal code_order ${co.id} tidak boleh memiliki blocks yang sudah tersusun persis sama dengan correctOrder`
+            ).not.toEqual(co.correctOrder);
+          }
+        }
+      }
+    });
+
+    it("tipe fill_blank tidak boleh selalu menaruh correctAnswer di options[0]", () => {
+      const positions: number[] = [];
+      for (const level of allLevels) {
+        for (const question of level.questions) {
+          if (question.type === "fill_blank") {
+            const fb = question as FillBlankQuestion;
+            positions.push(fb.options.indexOf(fb.correctAnswer));
+          }
+        }
+      }
+
+      const zeroCount = positions.filter((pos) => pos === 0).length;
+      expect(zeroCount / positions.length).toBeLessThan(0.3);
+    });
   });
 
   describe("Helper Functions", () => {

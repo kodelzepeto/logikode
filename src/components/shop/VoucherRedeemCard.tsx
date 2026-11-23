@@ -98,34 +98,20 @@ export function VoucherRedeemCard() {
         </AnimatePresence>
       </form>
 
-      {/* Petunjuk Kode Demo / MVP */}
-      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-2.5 text-[11px] text-slate-500">
-        <span className="font-bold text-slate-700 block mb-0.5">
-          💡 Tips Uji Coba (Kode Demo):
-        </span>
-        <div className="flex flex-wrap gap-1.5 mt-1 font-mono text-[10px]">
-          <span
-            onClick={() => setVoucherCode("LOGIFREEZE2K")}
-            className="bg-white px-2 py-0.5 rounded-lg border border-slate-200 text-sky-700 font-bold cursor-pointer hover:bg-sky-50"
-            title="Klik untuk mengisi kode"
-          >
-            LOGIFREEZE2K
-          </span>
-          <span
-            onClick={() => setVoucherCode("LOGIHEART2K")}
-            className="bg-white px-2 py-0.5 rounded-lg border border-slate-200 text-rose-700 font-bold cursor-pointer hover:bg-rose-50"
-            title="Klik untuk mengisi kode"
-          >
-            LOGIHEART2K
-          </span>
-          <span
-            onClick={() => setVoucherCode("LOGIPRO7D")}
-            className="bg-white px-2 py-0.5 rounded-lg border border-slate-200 text-amber-700 font-bold cursor-pointer hover:bg-amber-50"
-            title="Klik untuk mengisi kode"
-          >
-            LOGIPRO7D
-          </span>
-        </div>
+      {/* Petunjuk Redeem Lynk.id */}
+      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 text-[11px] text-slate-500 flex items-start gap-2">
+        <span className="text-amber-500 text-xs shrink-0 mt-0.5">💡</span>
+        <p className="leading-relaxed">
+          Setelah menyelesaikan transaksi QRIS di Lynk.id, masukkan kode dari bukti pembayaran (format:{" "}
+          <code className="font-mono font-bold text-slate-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+            PREFIX-NOMOR_ORDER
+          </code>
+          , contoh:{" "}
+          <code className="font-mono font-bold text-slate-700 bg-white px-1.5 py-0.5 rounded border border-slate-200">
+            FRZ-CDG-82914
+          </code>
+          ) untuk mengaktifkan item secara instan.
+        </p>
       </div>
     </div>
   );

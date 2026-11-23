@@ -17,12 +17,12 @@ export const unit4: Unit = {
           type: "multiple_choice",
           prompt: "Apa kepanjangan dari SQL dan fungsi utamanya dalam pengembangan perangkat lunak?",
           options: [
-            "Structured Query Language — bahasa standar untuk mengelola data pada database relasional",
             "Simple Quick Link — protokol transfer kabel internet",
             "System Quality Logic — software pengujian hardware komputer",
+            "Structured Query Language — bahasa standar untuk mengelola data pada database relasional",
             "Standard Query Loop — pustaka grafis animasi 3D",
           ],
-          correctIndex: 0,
+          correctIndex: 2,
           explanation:
             "SQL (Structured Query Language) digunakan di berbagai database populer seperti PostgreSQL, MySQL, dan SQLite untuk query dan manipulasi data.",
         },
@@ -31,7 +31,7 @@ export const unit4: Unit = {
           type: "fill_blank",
           prompt: "Lengkapi kata kunci perintah untuk mengambil seluruh data dari tabel `siswa`!",
           codeTemplate: "___ * FROM siswa;",
-          options: ["SELECT", "GET", "FETCH", "SHOW"],
+          options: ["GET", "SELECT", "FETCH", "SHOW"],
           correctAnswer: "SELECT",
           explanation:
             "Perintah `SELECT` adalah perintah dasar SQL yang wajib digunakan saat kita ingin membaca atau mengambil data dari suatu tabel.",
@@ -41,8 +41,8 @@ export const unit4: Unit = {
           type: "code_order",
           prompt: "Susun baris query SQL yang benar untuk mengambil kolom nama dan email dari tabel `pengguna`!",
           blocks: [
-            "SELECT nama, email",
             "FROM pengguna;",
+            "SELECT nama, email",
           ],
           correctOrder: [
             "SELECT nama, email",
@@ -56,12 +56,12 @@ export const unit4: Unit = {
           type: "multiple_choice",
           prompt: "Apa fungsi dari simbol tanda bintang (`*`) pada query `SELECT * FROM produk;`?",
           options: [
-            "Mengambil semua kolom yang tersedia di dalam tabel tersebut",
             "Mengalikan seluruh harga produk dengan angka 2",
+            "Mengambil semua kolom yang tersedia di dalam tabel tersebut",
             "Menghapus tabel produk secara permanen",
             "Membuat cadangan data di komputer lokal",
           ],
-          correctIndex: 0,
+          correctIndex: 1,
           explanation:
             "Tanda bintang (`*`) bertindak sebagai wildcard yang mewakili seluruh kolom yang ada pada skema tabel.",
         },
@@ -70,7 +70,7 @@ export const unit4: Unit = {
           type: "fill_blank",
           prompt: "Lengkapi kata kunci agar hasil query diurutkan dari skor terbesar ke terkecil (menurun)!",
           codeTemplate: "SELECT * FROM nilai ORDER BY skor ___ ;",
-          options: ["DESC", "ASC", "TOP", "DOWN"],
+          options: ["ASC", "TOP", "DESC", "DOWN"],
           correctAnswer: "DESC",
           explanation:
             "`DESC` (Descending) mengurutkan data dari nilai tertinggi ke terendah, sedangkan `ASC` (Ascending) dari terkecil ke terbesar.",
@@ -88,12 +88,12 @@ export const unit4: Unit = {
           type: "multiple_choice",
           prompt: "Klausa apa yang digunakan dalam SQL untuk menyaring baris data berdasarkan kriteria tertentu?",
           options: [
-            "WHERE",
             "FILTER",
             "IF",
             "CHECK",
+            "WHERE",
           ],
-          correctIndex: 0,
+          correctIndex: 3,
           explanation:
             "Klausa `WHERE` mengevaluasi setiap baris data dan hanya mengembalikan baris yang memenuhi ekspresi logika yang ditentukan.",
         },
@@ -102,7 +102,7 @@ export const unit4: Unit = {
           type: "fill_blank",
           prompt: "Lengkapi operator pembanding untuk mencari siswa yang berumur 17 tahun ke atas!",
           codeTemplate: "SELECT * FROM siswa WHERE umur ___ 17;",
-          options: [">=", "==", "=>", "<>"],
+          options: ["==", ">=", "=>", "<>"],
           correctAnswer: ">=",
           explanation:
             "Operator `>=` (lebih besar sama dengan) memastikan batas minimal umur 17 tahun ikut terpilih dalam hasil query.",
@@ -112,10 +112,10 @@ export const unit4: Unit = {
           type: "code_order",
           prompt: "Susun query SQL untuk mencari siswa jurusan 'RPL' dengan nilai di atas 85!",
           blocks: [
-            "SELECT nama, nilai",
-            "FROM siswa",
             "WHERE jurusan = 'RPL'",
+            "SELECT nama, nilai",
             "AND nilai > 85;",
+            "FROM siswa",
           ],
           correctOrder: [
             "SELECT nama, nilai",
@@ -145,7 +145,7 @@ export const unit4: Unit = {
           type: "fill_blank",
           prompt: "Lengkapi karakter wildcard untuk mencari produk yang berawalan kata 'Kopi'!",
           codeTemplate: "SELECT * FROM produk WHERE nama LIKE 'Kopi___';",
-          options: ["%", "*", "?", "#"],
+          options: ["*", "?", "%", "#"],
           correctAnswer: "%",
           explanation:
             "Dalam operator `LIKE` SQL, simbol `%` mewakili nol atau lebih karakter apa pun, sehingga `'Kopi%'` mencocokkan 'Kopi Susu', 'Kopi Hitam', dst.",
@@ -163,12 +163,12 @@ export const unit4: Unit = {
           type: "multiple_choice",
           prompt: "Perintah SQL apa yang digunakan untuk menambahkan baris data baru ke dalam sebuah tabel?",
           options: [
-            "INSERT INTO",
             "ADD ROW",
+            "INSERT INTO",
             "NEW RECORD",
             "PUT DATA",
           ],
-          correctIndex: 0,
+          correctIndex: 1,
           explanation:
             "Sintaks standar SQL untuk menyimpan baris data baru adalah `INSERT INTO nama_tabel (kolom) VALUES (nilai);`.",
         },
@@ -177,7 +177,7 @@ export const unit4: Unit = {
           type: "fill_blank",
           prompt: "Lengkapi kata kunci penampung nilai pada perintah penambahan data!",
           codeTemplate: "INSERT INTO pengguna (nama, role)\n___ ('Budi', 'siswa');",
-          options: ["VALUES", "DATA", "SET", "ITEMS"],
+          options: ["DATA", "SET", "VALUES", "ITEMS"],
           correctAnswer: "VALUES",
           explanation:
             "Kata kunci `VALUES` menampung tuple nilai yang akan dipetakan sesuai urutan kolom yang didefinisikan sebelumnya.",
@@ -187,8 +187,8 @@ export const unit4: Unit = {
           type: "code_order",
           prompt: "Susun perintah penambahan data baru ke tabel produk!",
           blocks: [
-            "INSERT INTO produk (nama, harga)",
             "VALUES ('Buku Koding', 45000);",
+            "INSERT INTO produk (nama, harga)",
           ],
           correctOrder: [
             "INSERT INTO produk (nama, harga)",
@@ -203,12 +203,12 @@ export const unit4: Unit = {
           prompt: "Mengapa sangat krusial menyertakan klausa WHERE saat mengeksekusi perintah UPDATE atau DELETE?",
           codeSnippet: "UPDATE siswa SET status = 'Lulus'; -- Tanpa WHERE!",
           options: [
-            "Karena tanpa WHERE, perubahan akan menimpa SELURUH baris data yang ada di tabel!",
             "Karena query akan otomatis ditolak oleh compiler",
             "Karena database akan otomatis terkunci selama 24 jam",
+            "Karena tanpa WHERE, perubahan akan menimpa SELURUH baris data yang ada di tabel!",
             "Karena data akan digandakan menjadi 2 kali lipat",
           ],
-          correctIndex: 0,
+          correctIndex: 2,
           explanation:
             "Tanpa `WHERE`, perintah `UPDATE` atau `DELETE` akan berdampak pada 100% baris di tabel, yang berpotensi menyebabkan bencana kehilangan/kerusakan data.",
         },
@@ -217,9 +217,9 @@ export const unit4: Unit = {
           type: "code_order",
           prompt: "Susun query UPDATE yang aman dengan klausa WHERE untuk memperbarui harga produk id 10!",
           blocks: [
+            "WHERE id = 10;",
             "UPDATE produk",
             "SET harga = 50000",
-            "WHERE id = 10;",
           ],
           correctOrder: [
             "UPDATE produk",

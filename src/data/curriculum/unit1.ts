@@ -17,12 +17,12 @@ export const unit1: Unit = {
           type: "multiple_choice",
           prompt: "Apa analogi yang paling tepat untuk menggambarkan variabel dalam pemrograman?",
           options: [
-            "Sebuah kotak penyimpanan berlabel untuk menaruh suatu nilai",
             "Layar monitor untuk menampilkan gambar",
+            "Sebuah kotak penyimpanan berlabel untuk menaruh suatu nilai",
             "Kabel listrik pengalir daya",
             "Tombol power komputer",
           ],
-          correctIndex: 0,
+          correctIndex: 1,
           explanation:
             "Variabel bekerja seperti kotak penyimpanan berlabel. Nama variabel adalah labelnya, dan isinya adalah data/nilai yang disimpan di memori.",
         },
@@ -31,7 +31,7 @@ export const unit1: Unit = {
           type: "fill_blank",
           prompt: "Lengkapi potongan kode berikut untuk membuat variabel bernama `namaPengguna`!",
           codeTemplate: "let ___ = \"Amin\";",
-          options: ["namaPengguna", "123", "==", "+="],
+          options: ["123", "==", "namaPengguna", "+="],
           correctAnswer: "namaPengguna",
           explanation:
             "Kata kunci `let` diikuti oleh nama variabel yang kita buat, misalnya `namaPengguna`, lalu tanda `=` memberikan nilai awalnya.",
@@ -41,9 +41,9 @@ export const unit1: Unit = {
           type: "code_order",
           prompt: "Susun baris kode berikut dengan urutan yang benar untuk mencetak salam!",
           blocks: [
+            "console.log(sapaan);",
             "let nama = \"Budi\";",
             "let sapaan = \"Halo \" + nama;",
-            "console.log(sapaan);",
           ],
           correctOrder: [
             "let nama = \"Budi\";",
@@ -58,12 +58,12 @@ export const unit1: Unit = {
           type: "multiple_choice",
           prompt: "Manakah gaya penamaan variabel yang baik dan mudah dibaca menurut konvensi camelCase?",
           options: [
-            "totalSkorPemain",
             "TOTALSKORPEMAIN",
             "1_skor_total",
+            "totalSkorPemain",
             "tot-skor-pemain",
           ],
-          correctIndex: 0,
+          correctIndex: 2,
           explanation:
             "`totalSkorPemain` menggunakan gaya camelCase yang umum di JavaScript: huruf pertama kecil, kata selanjutnya diawali huruf besar, serta tidak diawali angka.",
         },
@@ -72,7 +72,7 @@ export const unit1: Unit = {
           type: "fill_blank",
           prompt: "Ubah nilai variabel `skor` dari 10 menjadi 20!",
           codeTemplate: "let skor = 10;\nskor = ___;",
-          options: ["20", "let 20", "\"sepuluh\"", "=="],
+          options: ["let 20", "\"sepuluh\"", "20", "=="],
           correctAnswer: "20",
           explanation:
             "Untuk memperbarui nilai variabel yang sudah ada, kita tidak perlu menulis kata kunci `let` lagi, cukup panggil nama variabel dan beri nilai baru `20`.",
@@ -89,8 +89,8 @@ export const unit1: Unit = {
           id: "u1-l2-q1",
           type: "multiple_choice",
           prompt: "Tipe data apa yang digunakan untuk menyatakan kondisi Benar (`true`) atau Salah (`false`)?",
-          options: ["Boolean", "String", "Number", "Array"],
-          correctIndex: 0,
+          options: ["String", "Number", "Array", "Boolean"],
+          correctIndex: 3,
           explanation:
             "Tipe data Boolean hanya memiliki dua kemungkinan nilai: `true` (benar) atau `false` (salah). Sangat krusial untuk logika pengambilan keputusan.",
         },
@@ -99,7 +99,7 @@ export const unit1: Unit = {
           type: "fill_blank",
           prompt: "Tentukan tipe data teks (String) yang tepat dengan tanda petik!",
           codeTemplate: "let bahasa = ___;",
-          options: ["\"Indonesia\"", "Indonesia", "true", "123"],
+          options: ["Indonesia", "true", "\"Indonesia\"", "123"],
           correctAnswer: "\"Indonesia\"",
           explanation:
             "Data bertipe String (teks) wajib diapit tanda petik, misalnya `\"Indonesia\"` atau `'Indonesia'` agar komputer memahaminya sebagai teks.",
@@ -109,9 +109,9 @@ export const unit1: Unit = {
           type: "code_order",
           prompt: "Urutkan deklarasi tipe data berikut: String, Number, dan Boolean!",
           blocks: [
-            "let judul = \"LogiKode\";",
             "let level = 1;",
             "let isAktif = true;",
+            "let judul = \"LogiKode\";",
           ],
           correctOrder: [
             "let judul = \"LogiKode\";",
@@ -125,8 +125,8 @@ export const unit1: Unit = {
           id: "u1-l2-q4",
           type: "multiple_choice",
           prompt: "Jika kamu menjalankan operasi `typeof 42`, apa tipe data yang dihasilkan?",
-          options: ["number", "string", "boolean", "undefined"],
-          correctIndex: 0,
+          options: ["string", "number", "boolean", "undefined"],
+          correctIndex: 1,
           explanation:
             "Angka bulat maupun desimal seperti 42 atau 3.14 memiliki tipe data dasar `number`.",
         },
@@ -135,7 +135,7 @@ export const unit1: Unit = {
           type: "fill_blank",
           prompt: "Lengkapi kode agar variabel `isLoggedIn` menandakan pengguna telah login!",
           codeTemplate: "let isLoggedIn = ___;",
-          options: ["true", "\"true\"", "1", "yes"],
+          options: ["\"true\"", "1", "yes", "true"],
           correctAnswer: "true",
           explanation:
             "Nilai boolean literal adalah kata kunci `true` tanpa tanda petik. Tanda petik `\"true\"` akan membuatnya menjadi teks (String).",
@@ -152,8 +152,8 @@ export const unit1: Unit = {
           id: "u1-l3-q1",
           type: "multiple_choice",
           prompt: "Operator apa yang digunakan untuk mencari sisa hasil pembagian (Modulus)?",
-          options: ["%", "/", "//", "mod"],
-          correctIndex: 0,
+          options: ["/", "//", "%", "mod"],
+          correctIndex: 2,
           explanation:
             "Operator `%` (Modulus) menghasilkan sisa dari pembagian bilangan. Contoh: `7 % 3` menghasilkan `1` karena 7 dibagi 3 adalah 2 bersisa 1.",
         },
@@ -162,7 +162,7 @@ export const unit1: Unit = {
           type: "fill_blank",
           prompt: "Lengkapi operator untuk mengecek apakah `umur` lebih besar atau sama dengan 17!",
           codeTemplate: "let bolehPunyaKTP = umur ___ 17;",
-          options: [">=", "<=", "==", "!="],
+          options: ["<=", ">=", "==", "!="],
           correctAnswer: ">=",
           explanation:
             "Operator `>=` berarti lebih dari atau sama dengan. Jika umur 17 atau lebih, hasilnya bernilai `true`.",
@@ -172,9 +172,9 @@ export const unit1: Unit = {
           type: "code_order",
           prompt: "Susun langkah menghitung harga akhir setelah diskon!",
           blocks: [
-            "let hargaAsli = 100000;",
-            "let diskon = 20000;",
             "let hargaBayar = hargaAsli - diskon;",
+            "let diskon = 20000;",
+            "let hargaAsli = 100000;",
           ],
           correctOrder: [
             "let hargaAsli = 100000;",
@@ -188,8 +188,8 @@ export const unit1: Unit = {
           id: "u1-l3-q4",
           type: "multiple_choice",
           prompt: "Apa hasil evaluasi logika dari ekspresi `(10 > 5) && (3 > 7)`?",
-          options: ["false", "true", "undefined", "10"],
-          correctIndex: 0,
+          options: ["true", "false", "undefined", "10"],
+          correctIndex: 1,
           explanation:
             "Operator `&&` (DAN) memerlukan kedua sisi bernilai `true`. Karena `(3 > 7)` bernilai `false`, maka seluruh ekspresi bernilai `false`.",
         },
@@ -198,7 +198,7 @@ export const unit1: Unit = {
           type: "fill_blank",
           prompt: "Lengkapi operator untuk memeriksa apakah nilai `a` TIDAK sama dengan `b`!",
           codeTemplate: "let isBerbeda = (a ___ b);",
-          options: ["!=", "==", "=", "><"],
+          options: ["==", "!=", "=", "><"],
           correctAnswer: "!=",
           explanation:
             "Operator `!=` atau `!==` digunakan untuk memeriksa ketidaksamaan. Menghasilkan `true` jika kedua nilai berbeda.",
