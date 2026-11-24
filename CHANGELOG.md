@@ -6,10 +6,13 @@ Format penulisan mengacu pada [Keep a Changelog](https://keepachangelog.com/id/1
 ## [1.0.2] - 2026-11-24
 
 ### Added
+- **Modal "Apa yang Baru" (*What's New*) (`src/components/modals/WhatsNewModal.tsx`)**: Dialog interaktif otomatis muncul 1x saat pengguna membuka versi lebih baru dari yang tersimpan di `localStorage`, lengkap dengan selector riwayat versi rilis terdahulu.
+- **Tombol "Lihat Riwayat Update" di Halaman Profil**: Akses instan di halaman Profil untuk meninjau changelog resmi kapan saja.
+- **Helper Kontrol Notifikasi Pembaruan (`src/lib/version.ts`)**: Fungsi `shouldShowWhatsNew`, `getLastSeenVersion`, dan `markVersionAsSeen` untuk mendeteksi kenaikan versi secara deterministik.
 - **Mekanik Pengulangan Soal Salah ala Duolingo (`src/lib/lessonQueue.ts`)**: Soal yang dijawab salah otomatis dipindahkan ke bagian belakang antrean sesi kuis sampai berhasil dijawab benar.
 - **Badge Soal Pengulangan**: Indikator visual lembut `🔁 Kesalahan Sebelumnya — Coba Lagi!` pada soal yang diulang serta pesan penyemangat di sesi perbaikan akhir.
 - **Badge Selebrasi Akurasi Jujur di Layar Akhir (`LessonComplete.tsx`)**: Menampilkan badge `✨ Sempurna!` hanya untuk akurasi 100% murni, dan `👍 Bagus!` untuk akurasi di bawah 100%.
-- **Unit Test Komprehensif Antrean Soal (`src/lib/__tests__/lessonQueue.test.ts`)**: 7 skenario pengujian otomatis memverifikasi alur antrean, pemindahan soal salah, resolusi soal, dan kalkulasi akurasi anti-100%.
+- **Unit Test Komprehensif Antrean Soal & Versi**: Memverifikasi alur antrean, akurasi anti-100%, serta deteksi modal Apa yang Baru.
 
 ### Changed
 - **Perhitungan Akurasi Kuis**: Akurasi dihitung berdasarkan soal yang benar pada percobaan pertama (`firstTryCorrect / totalOriginalQuestions`), sehingga akurasi tidak menjadi 100% jika pernah melakukan kesalahan.

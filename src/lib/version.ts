@@ -21,12 +21,13 @@ export const RELEASE_NOTES: ReleaseNote[] = [
   {
     version: "1.0.2",
     date: "2026-11-24",
-    title: "Mekanik Pengulangan Soal Salah ala Duolingo (Retry Queue)",
+    title: "Modal 'Apa yang Baru' & Antrean Pengulangan Soal Duolingo",
     highlights: [
-      "Mekanik antrean pengulangan soal salah (retry queue) di akhir sesi",
-      "Kalkulasi akurasi akhir jujur (anti-100% jika pernah salah)",
-      "Badge 'Kesalahan Sebelumnya — Coba Lagi!' dan selebrasi akurasi di layar akhir",
-      "Proteksi anti-farming XP untuk soal yang diulang",
+      "Modal otomatis 'Apa yang Baru' (What's New) untuk update versi aplikasi",
+      "Tombol 'Lihat Riwayat Update' di halaman Profil",
+      "Mekanik antrean pengulangan soal salah (retry queue) di akhir sesi kuis",
+      "Kalkulasi akurasi jujur anti-100% dan proteksi anti-farming XP",
+      "Badge selebrasi akurasi '✨ Sempurna!' vs '👍 Bagus!' di layar akhir",
     ],
   },
   {
@@ -52,6 +53,45 @@ export const RELEASE_NOTES: ReleaseNote[] = [
 ];
 
 export const CHANGELOG_ENTRIES = RELEASE_NOTES;
+
+export const LAST_SEEN_VERSION_KEY = "logikode_last_seen_version";
+
+/**
+ * Menentukan apakah modal "Apa yang Baru" harus ditampilkan secara otomatis.
+ * Bernilai true jika belum pernah tersimpan di localStorage atau jika versi saat ini
+ * lebih baru dari versi yang tersimpan di localStorage.
+ */
+export function shouldShowWhatsNew(
+  currentVersion: string,
+  lastSeenVersion: string | null
+): boolean {
+  if (!lastSeenVersion) return true;
+  return isNewerVersion(currentVersion, lastSeenVersion);
+}
+
+/**
+ * Mengambil versi terakhir yang sudah dilihat pengguna dari localStorage.
+ */
+export function getLastSeenVersion(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return localStorage.getItem(LAST_SEEN_VERSION_KEY);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Menyimpan versi saat ini ke localStorage agar modal tidak muncul berulang kali.
+ */
+export function markVersionAsSeen(version: string = APP_VERSION): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(LAST_SEEN_VERSION_KEY, version);
+  } catch (err) {
+    console.warn("Gagal menyimpan last seen version:", err);
+  }
+}
 
 /**
  * Mengembalikan versi aplikasi saat ini

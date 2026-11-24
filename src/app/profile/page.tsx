@@ -9,6 +9,7 @@ import { AppFooter } from "@/components/layout/AppFooter";
 import { useUserProgress } from "@/hooks/useUserProgress";
 import { getAllLevels, CURRICULUM_UNITS } from "@/data/curriculum";
 import { CertificateModal } from "@/components/certificate/CertificateModal";
+import { WhatsNewModal } from "@/components/modals/WhatsNewModal";
 import {
   generateStoryShareImage,
   downloadDataUrl,
@@ -40,6 +41,7 @@ export default function ProfilePage() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  const [showWhatsNew, setShowWhatsNew] = useState(false);
   const [selectedCertUnit, setSelectedCertUnit] = useState<{
     number: number;
     title: string;
@@ -112,10 +114,15 @@ export default function ProfilePage() {
               <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
                 <CheckCircle2 className="w-3 h-3" /> Akun Aktif
               </span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200 font-mono">
+              <button
+                type="button"
+                onClick={() => setShowWhatsNew(true)}
+                className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded-full border border-slate-200 font-mono transition-colors cursor-pointer"
+                title="Lihat Apa yang Baru"
+              >
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 v{APP_VERSION}
-              </span>
+              </button>
             </div>
           </div>
         </div>
@@ -429,12 +436,21 @@ export default function ProfilePage() {
           )}
         </section>
 
-        {/* Badge Versi Aplikasi Resmi */}
-        <div className="flex items-center justify-center -mt-1 mb-0">
+        {/* Badge Versi Aplikasi Resmi & Tombol Riwayat Update */}
+        <div className="flex flex-col items-center justify-center gap-2 -mt-1 mb-0">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200/90 text-slate-500 text-[11px] font-bold font-mono select-none">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
             <span>{getAppVersionBadge()}</span>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setShowWhatsNew(true)}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-50 hover:bg-amber-100 border border-amber-200/80 text-amber-800 text-xs font-bold transition-all shadow-2xs cursor-pointer select-none"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <span>Lihat Riwayat Update & Catatan Rilis</span>
+          </button>
         </div>
 
         {/* Footer Branding Resmi Core Dev Group */}
@@ -450,6 +466,12 @@ export default function ProfilePage() {
           unitTitle={selectedCertUnit.title}
         />
       )}
+
+      {/* Modal Apa yang Baru / Riwayat Update */}
+      <WhatsNewModal
+        isOpen={showWhatsNew}
+        onClose={() => setShowWhatsNew(false)}
+      />
     </MobileShell>
   );
 }

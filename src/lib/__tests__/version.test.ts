@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import packageJson from "../../../package.json";
 import {
   APP_VERSION,
@@ -10,9 +10,36 @@ import {
   getAppVersionBadge,
   getLatestReleaseNote,
   isNewerVersion,
+  shouldShowWhatsNew,
+  markVersionAsSeen,
+  getLastSeenVersion,
+  LAST_SEEN_VERSION_KEY,
 } from "../version";
 
 describe("Sistem Versioning & SemVer Sync Gate", () => {
+  let mockStore: Record<string, string> = {};
+
+  beforeEach(() => {
+    mockStore = {};
+    const mockLocalStorage = {
+      getItem: vi.fn((key: string) => mockStore[key] ?? null),
+      setItem: vi.fn((key: string, value: string) => {
+        mockStore[key] = value;
+      }),
+      removeItem: vi.fn((key: string) => {
+        delete mockStore[key];
+      }),
+      clear: vi.fn(() => {
+        mockStore = {};
+      }),
+      length: 0,
+      key: vi.fn(() => null),
+    };
+
+    vi.stubGlobal("localStorage", mockLocalStorage);
+    vi.stubGlobal("window", { localStorage: mockLocalStorage });
+  });
+
   it("harus sinkron 100% antara APP_VERSION di version.ts dan version di package.json", () => {
     expect(APP_VERSION).toBe(packageJson.version);
     expect(getAppVersion()).toBe(packageJson.version);
@@ -48,5 +75,28 @@ describe("Sistem Versioning & SemVer Sync Gate", () => {
     expect(isNewerVersion("2.0.0", "1.9.9")).toBe(true);
     expect(isNewerVersion("1.0.1", "1.0.1")).toBe(false);
     expect(isNewerVersion("1.0.0", "1.0.1")).toBe(false);
+  });
+
+  describe("Modal Apa yang Baru (What's New Helper)", () => {
+    it("shouldShowWhatsNew harus true jika belum pernah membuka versi apapun (null)", () => {
+      expect(shouldShowWhatsNew("1.0.2", null)).toBe(true);
+    });
+
+    it("shouldShowWhatsNew harus true jika versi saat ini lebih baru dari versi tersimpan", () => {
+      expect(shouldShowWhatsNew("1.0.2", "1.0.1")).toBe(true);
+      expect(shouldShowWhatsNew("1.1.0", "1.0.2")).toBe(true);
+    });
+
+    it("shouldShowWhatsNew harus false jika versi saat ini sama atau lebih lama dari versi tersimpan", () => {
+      expect(shouldShowWhatsNew("1.0.2", "1.0.2")).toBe(false);
+      expect(shouldShowWhatsNew("1.0.1", "1.0.2")).toBe(false);
+    });
+
+    it("markVersionAsSeen dan getLastSeenVersion harus menyimpan & membaca dari localStorage", () => {
+      expect(getLastSeenVersion()).toBeNull();
+      markVersionAsSeen("1.0.2");
+      expect(getLastSeenVersion()).toBe("1.0.2");
+      expect(localStorage.getItem(LAST_SEEN_VERSION_KEY)).toBe("1.0.2");
+    });
   });
 });
