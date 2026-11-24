@@ -12,6 +12,18 @@ import {
 } from "@/lib/gamification";
 import { validateAnswer, ValidationResult } from "@/lib/quizValidator";
 import {
+  createLessonQueue,
+  handleCorrectAnswer,
+  handleWrongAnswer,
+  isRetryQuestion,
+  isRetryPhase,
+  calculateAccuracy,
+  getFirstTryCorrectCount,
+  getQueueProgressPercent,
+  isQueueFinished,
+  LessonQueueState,
+} from "@/lib/lessonQueue";
+import {
   playCorrect,
   playWrong,
   playLevelComplete,
@@ -24,7 +36,7 @@ import { FillBlankQuestion } from "./FillBlankQuestion";
 import { FeedbackDrawer } from "./FeedbackDrawer";
 import { LessonComplete } from "./LessonComplete";
 import { OutOfHeartsScreen } from "./OutOfHeartsScreen";
-import { Lock, ArrowLeft } from "lucide-react";
+import { Lock, ArrowLeft, RotateCcw, Sparkles } from "lucide-react";
 
 interface LessonRunnerProps {
   level: Level;
@@ -35,13 +47,15 @@ export function LessonRunner({ level }: LessonRunnerProps) {
   const allLevels = getAllLevels();
   const nextLevelId = getNextLevelId(level.id);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // Menggunakan Lesson Retry Queue ala Duolingo
+  const [queueState, setQueueState] = useState<LessonQueueState>(() =>
+    createLessonQueue(level.questions)
+  );
   const [userAnswer, setUserAnswer] = useState<unknown>(null);
   const [isAnswerChecked, setIsAnswerChecked] = useState(false);
   const [feedback, setFeedback] = useState<
     (ValidationResult & { explanation: string }) | null
   >(null);
-  const [correctCount, setCorrectCount] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
   // Tunggu client mount untuk menghindari hydration mismatch
@@ -86,23 +100,28 @@ export function LessonRunner({ level }: LessonRunnerProps) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col justify-between max-w-md mx-auto border-x border-slate-200">
         <LessonHeader
-          currentQuestionIndex={currentIndex}
-          totalQuestions={level.questions.length}
+          currentQuestionIndex={queueState.resolvedCount}
+          totalQuestions={queueState.totalOriginalQuestions}
           hearts={progress.hearts}
           isUnlimited={isUnlimited}
+          progressPercentOverride={getQueueProgressPercent(queueState)}
         />
         <OutOfHeartsScreen />
       </div>
     );
   }
 
-  // Layar Selesai (Selebrasi & XP)
-  if (isFinished) {
-    const accuracy = Math.round((correctCount / level.questions.length) * 100);
+  // Layar Selesai (Selebrasi & XP dengan Akurasi Jujur Anti-100%)
+  if (isFinished || isQueueFinished(queueState)) {
+    const accuracy = calculateAccuracy(
+      queueState.totalOriginalQuestions,
+      queueState.missedIds.length
+    );
+    const firstTryCorrect = getFirstTryCorrectCount(queueState);
     const earnedXP = calculateLevelXP(
       level.id,
       progress.completedLevels,
-      correctCount
+      firstTryCorrect
     );
 
     return (
@@ -118,10 +137,16 @@ export function LessonRunner({ level }: LessonRunnerProps) {
     );
   }
 
-  const currentQuestion = level.questions[currentIndex];
+  const currentQuestion = queueState.queue[0];
+  const isRetry = currentQuestion
+    ? isRetryQuestion(queueState, currentQuestion.id)
+    : false;
+  const inRetryPhase = isRetryPhase(queueState);
+  const progressPercent = getQueueProgressPercent(queueState);
 
   // Evaluasi apakah tombol "Periksa" boleh diaktifkan
   const isAnswerProvided = () => {
+    if (!currentQuestion) return false;
     if (userAnswer === null || userAnswer === undefined) return false;
     if (currentQuestion.type === "code_order") {
       return (
@@ -140,12 +165,11 @@ export function LessonRunner({ level }: LessonRunnerProps) {
 
   // Aksi: Pengguna menekan tombol "Periksa"
   const handleCheck = () => {
-    if (!isAnswerProvided()) return;
+    if (!currentQuestion || !isAnswerProvided()) return;
 
     const result = validateAnswer(currentQuestion, userAnswer);
 
     if (result.isCorrect) {
-      setCorrectCount((prev) => prev + 1);
       playCorrect();
     } else {
       consumeHeart();
@@ -163,27 +187,37 @@ export function LessonRunner({ level }: LessonRunnerProps) {
   const handleNext = () => {
     playClick();
 
+    if (!feedback) return;
+
     // Jika jawaban salah dan nyawa tersisa 0 tanpa Unlimited Hearts -> tampilkan Out of Hearts
-    if (!feedback?.isCorrect && progress.hearts <= 1 && !isUnlimited) {
+    if (!feedback.isCorrect && progress.hearts <= 1 && !isUnlimited) {
       setIsAnswerChecked(false);
       setFeedback(null);
       return;
     }
 
-    if (currentIndex < level.questions.length - 1) {
-      // Pindah ke soal berikutnya
-      setCurrentIndex((prev) => prev + 1);
+    if (feedback.isCorrect) {
+      const nextState = handleCorrectAnswer(queueState);
+      setQueueState(nextState);
+
+      if (isQueueFinished(nextState)) {
+        // Seluruh antrean kuis tuntas! Panggil completeLevel dengan firstTryCorrect (anti-farming)
+        const firstTryCorrect = getFirstTryCorrectCount(nextState);
+        completeLevel(level.id, firstTryCorrect);
+        playLevelComplete();
+        setIsFinished(true);
+      } else {
+        setUserAnswer(null);
+        setIsAnswerChecked(false);
+        setFeedback(null);
+      }
+    } else {
+      // Jawaban salah: pindahkan soal aktif ke bagian belakang antrean (Duolingo Retry Queue)
+      const nextState = handleWrongAnswer(queueState);
+      setQueueState(nextState);
       setUserAnswer(null);
       setIsAnswerChecked(false);
       setFeedback(null);
-    } else {
-      // Kuis tuntas! Panggil completeLevel dan bunyikan suara fanfare
-      const finalCorrectCount = feedback?.isCorrect
-        ? correctCount
-        : correctCount;
-      completeLevel(level.id, finalCorrectCount);
-      playLevelComplete();
-      setIsFinished(true);
     }
   };
 
@@ -229,15 +263,35 @@ export function LessonRunner({ level }: LessonRunnerProps) {
     <div className="min-h-screen bg-slate-50 flex flex-col justify-between max-w-md mx-auto border-x border-slate-200 relative pb-28">
       {/* Top Header dengan progress bar dan nyawa */}
       <LessonHeader
-        currentQuestionIndex={currentIndex}
-        totalQuestions={level.questions.length}
+        currentQuestionIndex={queueState.resolvedCount}
+        totalQuestions={queueState.totalOriginalQuestions}
         hearts={progress.hearts}
         isUnlimited={isUnlimited}
+        progressPercentOverride={progressPercent}
       />
 
       {/* Konten Soal */}
-      <main className="flex-1 p-5 flex flex-col justify-start">
-        {renderQuestion(currentQuestion)}
+      <main
+        key={currentQuestion ? `${currentQuestion.id}-${queueState.queue.length}` : "empty"}
+        className="flex-1 p-5 flex flex-col justify-start"
+      >
+        {/* Notifikasi Pengulangan di Akhir Sesi yang Ramah */}
+        {inRetryPhase && (
+          <div className="mb-3 px-3.5 py-2.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/90 rounded-2xl flex items-center gap-2 text-amber-900 text-xs font-bold shadow-2xs animate-fadeIn">
+            <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+            <span>Ayo selesaikan soal yang tadi keliru sampai tuntas! 💪</span>
+          </div>
+        )}
+
+        {/* Badge Soal Pengulangan ala Duolingo */}
+        {isRetry && (
+          <div className="mb-3 self-start inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100/90 border border-amber-300 text-amber-800 rounded-xl text-xs font-bold animate-fadeIn shadow-2xs">
+            <RotateCcw className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+            <span>🔁 Kesalahan Sebelumnya — Coba Lagi!</span>
+          </div>
+        )}
+
+        {currentQuestion && renderQuestion(currentQuestion)}
       </main>
 
       {/* Bilah Tombol Periksa (Bawah) jika belum diperiksa */}

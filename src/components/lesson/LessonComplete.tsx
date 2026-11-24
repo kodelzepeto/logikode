@@ -3,7 +3,17 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Trophy, Zap, Target, Flame, ArrowRight, Home, Share2, Sparkles } from "lucide-react";
+import {
+  Trophy,
+  Zap,
+  Target,
+  Flame,
+  ArrowRight,
+  Home,
+  Share2,
+  Sparkles,
+  ThumbsUp,
+} from "lucide-react";
 import { Level } from "@/types/curriculum";
 import { useUserProgress } from "@/hooks/useUserProgress";
 import { getAllLevels } from "@/data/curriculum";
@@ -68,6 +78,22 @@ export function LessonComplete({
         <h1 className="text-2xl font-black text-slate-900 tracking-tight">
           Latihan Selesai! 🎉
         </h1>
+
+        {/* Badge Akurasi ala Duolingo */}
+        <div className="mt-2 mb-1">
+          {accuracy >= 100 ? (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 border border-amber-300 text-amber-900 rounded-full text-xs font-black shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+              <span>✨ Sempurna!</span>
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-full text-xs font-black shadow-2xs">
+              <ThumbsUp className="w-3.5 h-3.5 text-emerald-600" />
+              <span>👍 Bagus!</span>
+            </span>
+          )}
+        </div>
+
         <p className="text-xs text-slate-500 mt-1 max-w-xs">
           Hebat! Kamu telah menuntaskan tantangan logika pada{" "}
           <strong className="text-slate-700">&ldquo;{level.title}&rdquo;</strong>.

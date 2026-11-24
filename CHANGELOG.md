@@ -3,6 +3,22 @@
 Semua perubahan penting pada proyek **LogiKode** oleh **Core Dev Group** didokumentasikan di berkas ini.
 Format penulisan mengacu pada [Keep a Changelog](https://keepachangelog.com/id/1.0.0/) dan proyek ini mematuhi prinsip [Semantic Versioning](https://semver.org/lang/id/).
 
+## [1.0.2] - 2026-11-24
+
+### Added
+- **Mekanik Pengulangan Soal Salah ala Duolingo (`src/lib/lessonQueue.ts`)**: Soal yang dijawab salah otomatis dipindahkan ke bagian belakang antrean sesi kuis sampai berhasil dijawab benar.
+- **Badge Soal Pengulangan**: Indikator visual lembut `🔁 Kesalahan Sebelumnya — Coba Lagi!` pada soal yang diulang serta pesan penyemangat di sesi perbaikan akhir.
+- **Badge Selebrasi Akurasi Jujur di Layar Akhir (`LessonComplete.tsx`)**: Menampilkan badge `✨ Sempurna!` hanya untuk akurasi 100% murni, dan `👍 Bagus!` untuk akurasi di bawah 100%.
+- **Unit Test Komprehensif Antrean Soal (`src/lib/__tests__/lessonQueue.test.ts`)**: 7 skenario pengujian otomatis memverifikasi alur antrean, pemindahan soal salah, resolusi soal, dan kalkulasi akurasi anti-100%.
+
+### Changed
+- **Perhitungan Akurasi Kuis**: Akurasi dihitung berdasarkan soal yang benar pada percobaan pertama (`firstTryCorrect / totalOriginalQuestions`), sehingga akurasi tidak menjadi 100% jika pernah melakukan kesalahan.
+- **Proteksi Anti-Farming XP**: Perolehan XP dibatasi hanya untuk soal unik yang benar pada percobaan pertama, mencegah eksploitasi pengulangan jawaban.
+- **Progress Bar Kuis**: Maju hanya ketika soal unik berhasil dijawab benar (`resolvedCount / totalOriginalQuestions`).
+- Versi aplikasi dinaikkan menjadi `v1.0.2`.
+
+---
+
 ## [1.0.1] - 2026-11-23
 
 ### Added

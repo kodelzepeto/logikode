@@ -5,7 +5,7 @@
  * ===================================================================
  */
 
-export const APP_VERSION = "1.0.1";
+export const APP_VERSION = "1.0.2";
 export const APP_NAME = "LogiKode";
 export const APP_AUTHOR = "Core Dev Group";
 export const APP_AUTHOR_URL = "https://core-dev-group.my.id";
@@ -18,6 +18,17 @@ export interface ReleaseNote {
 }
 
 export const RELEASE_NOTES: ReleaseNote[] = [
+  {
+    version: "1.0.2",
+    date: "2026-11-24",
+    title: "Mekanik Pengulangan Soal Salah ala Duolingo (Retry Queue)",
+    highlights: [
+      "Mekanik antrean pengulangan soal salah (retry queue) di akhir sesi",
+      "Kalkulasi akurasi akhir jujur (anti-100% jika pernah salah)",
+      "Badge 'Kesalahan Sebelumnya — Coba Lagi!' dan selebrasi akurasi di layar akhir",
+      "Proteksi anti-farming XP untuk soal yang diulang",
+    ],
+  },
   {
     version: "1.0.1",
     date: "2026-11-23",

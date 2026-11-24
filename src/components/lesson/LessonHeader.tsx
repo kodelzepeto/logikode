@@ -9,6 +9,7 @@ interface LessonHeaderProps {
   totalQuestions: number;
   hearts: number;
   isUnlimited: boolean;
+  progressPercentOverride?: number;
 }
 
 export function LessonHeader({
@@ -16,14 +17,18 @@ export function LessonHeader({
   totalQuestions,
   hearts,
   isUnlimited,
+  progressPercentOverride,
 }: LessonHeaderProps) {
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
   // Progress percentage (mulai dari sebagian kecil saat index 0 hingga 100%)
-  const progressPercent = Math.min(
-    100,
-    Math.round(((currentQuestionIndex) / totalQuestions) * 100)
-  );
+  const progressPercent =
+    progressPercentOverride !== undefined
+      ? Math.min(100, Math.max(0, progressPercentOverride))
+      : Math.min(
+          100,
+          Math.round((currentQuestionIndex / totalQuestions) * 100)
+        );
 
   return (
     <>
