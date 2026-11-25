@@ -54,6 +54,9 @@ export function createInitialProgress(): UserProgress {
     unlimitedHeartsUntil: null,
     completedLevels: [],
     redeemedVouchers: [],
+    userName: "",
+    dailyGoal: "regular",
+    onboardingCompleted: false,
   };
 }
 

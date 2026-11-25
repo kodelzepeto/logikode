@@ -10,6 +10,8 @@ import { useUserProgress } from "@/hooks/useUserProgress";
 import { getAllLevels, CURRICULUM_UNITS } from "@/data/curriculum";
 import { CertificateModal } from "@/components/certificate/CertificateModal";
 import { WhatsNewModal } from "@/components/modals/WhatsNewModal";
+import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
+import { getDailyGoalConfig } from "@/lib/onboarding";
 import {
   generateStoryShareImage,
   downloadDataUrl,
@@ -31,23 +33,27 @@ import {
   Search,
   Lock,
   ShieldCheck,
+  Pencil,
 } from "lucide-react";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { progress, resetProgress, isLoaded } = useUserProgress();
+  const { progress, resetProgress, isLoaded, completeOnboarding } = useUserProgress();
   const allLevels = getAllLevels();
 
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
   const [showWhatsNew, setShowWhatsNew] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [selectedCertUnit, setSelectedCertUnit] = useState<{
     number: number;
     title: string;
   } | null>(null);
   const [lookupCertId, setLookupCertId] = useState("");
   const [lookupError, setLookupError] = useState("");
+
+  const dailyGoalConfig = getDailyGoalConfig(progress.dailyGoal);
 
   const totalLevels = allLevels.length;
   const completedCount = isLoaded ? progress.completedLevels.length : 0;
@@ -104,9 +110,19 @@ export default function ProfilePage() {
             />
           </div>
           <div className="flex-1">
-            <h1 className="text-lg font-black text-slate-800 tracking-tight">
-              Pelajar LogiKode
-            </h1>
+            <div className="flex items-center justify-between">
+              <h1 className="text-lg font-black text-slate-800 tracking-tight">
+                {isLoaded && progress.userName ? progress.userName : "Pelajar LogiKode"}
+              </h1>
+              <button
+                type="button"
+                onClick={() => setShowOnboarding(true)}
+                className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-xl transition-colors cursor-pointer"
+                title="Ubah Nama & Target Belajar"
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
+            </div>
             <p className="text-xs text-slate-500 font-medium">
               Mode Belajar Tanpa Login (Penyimpanan Lokal)
             </p>
@@ -126,6 +142,41 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+
+        {/* Kartu Target Ritme Belajar Harian */}
+        <section className="bg-white rounded-3xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-xl shrink-0 shadow-inner">
+              {dailyGoalConfig.icon}
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  Target Harian
+                </span>
+                {dailyGoalConfig.badge && (
+                  <span className="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded-full border border-emerald-200">
+                    {dailyGoalConfig.badge}
+                  </span>
+                )}
+              </div>
+              <h3 className="text-xs font-black text-slate-800">
+                {dailyGoalConfig.title} ({dailyGoalConfig.targetXp} XP / hari)
+              </h3>
+              <p className="text-[11px] text-slate-500 font-medium">
+                {dailyGoalConfig.subtitle}
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowOnboarding(true)}
+            className="px-3 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 text-slate-700 font-bold rounded-xl text-xs transition-colors shrink-0 cursor-pointer shadow-2xs"
+          >
+            Ubah
+          </button>
+        </section>
 
         {/* Notifikasi Sukses Reset */}
         {resetSuccess && (
@@ -471,6 +522,18 @@ export default function ProfilePage() {
       <WhatsNewModal
         isOpen={showWhatsNew}
         onClose={() => setShowWhatsNew(false)}
+      />
+
+      {/* Modal Onboarding / Personalisasi Profil */}
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+        onComplete={(name, goal) => {
+          completeOnboarding(name, goal);
+          setShowOnboarding(false);
+        }}
+        initialName={progress.userName}
+        initialGoal={progress.dailyGoal}
       />
     </MobileShell>
   );

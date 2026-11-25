@@ -5,7 +5,7 @@
  * ===================================================================
  */
 
-export const APP_VERSION = "1.0.2";
+export const APP_VERSION = "1.0.3";
 export const APP_NAME = "LogiKode";
 export const APP_AUTHOR = "Core Dev Group";
 export const APP_AUTHOR_URL = "https://core-dev-group.my.id";
@@ -18,6 +18,17 @@ export interface ReleaseNote {
 }
 
 export const RELEASE_NOTES: ReleaseNote[] = [
+  {
+    version: "1.0.3",
+    date: "2026-11-25",
+    title: "Onboarding 3-Slide Pelajar & Pemilihan Target Belajar Harian",
+    highlights: [
+      "Onboarding interaktif 3-slide ramah pelajar dengan opsi lewati (skip)",
+      "Personalisasi nama panggilan pelajar di beranda, profil, dan sertifikat",
+      "Pemilihan target ritme belajar harian (Santai, Biasa, Serius, Gila Koding)",
+      "Menu ubah profil & ritme target belajar kapan saja di halaman Profil",
+    ],
+  },
   {
     version: "1.0.2",
     date: "2026-11-24",

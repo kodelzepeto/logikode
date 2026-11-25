@@ -10,6 +10,7 @@ import { LevelNode, LevelStatus } from "./LevelNode";
 import { Level } from "@/types/curriculum";
 import { Lock, X, ArrowRight } from "lucide-react";
 import { AppFooter } from "@/components/layout/AppFooter";
+import { getDailyGoalConfig } from "@/lib/onboarding";
 
 export function LearningPath() {
   const { progress } = useUserProgress();
@@ -29,6 +30,16 @@ export function LearningPath() {
 
   return (
     <div className="w-full px-4 py-5 flex flex-col items-center">
+      {/* Sapaan Personal Pengguna */}
+      {progress.userName && (
+        <div className="w-full max-w-sm mb-3 px-3.5 py-2 bg-white/90 backdrop-blur-xs border border-slate-200/80 rounded-2xl flex items-center justify-between text-xs font-bold text-slate-700 shadow-2xs">
+          <span>Hai, <strong className="text-emerald-600 font-extrabold">{progress.userName}</strong>! 👋</span>
+          <span className="text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200">
+            {getDailyGoalConfig(progress.dailyGoal).icon} {getDailyGoalConfig(progress.dailyGoal).title}
+          </span>
+        </div>
+      )}
+
       {/* Kartu Akses Cepat Mode Latihan Acak */}
       <Link
         href="/practice"

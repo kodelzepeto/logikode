@@ -47,6 +47,15 @@ export function loadProgress(): UserProgress {
       redeemedVouchers: Array.isArray(parsed.redeemedVouchers)
         ? parsed.redeemedVouchers.filter((c) => typeof c === "string")
         : [],
+      userName: typeof parsed.userName === "string" ? parsed.userName.trim() : "",
+      dailyGoal:
+        parsed.dailyGoal &&
+        ["casual", "regular", "serious", "intense"].includes(
+          parsed.dailyGoal as string
+        )
+          ? parsed.dailyGoal
+          : "regular",
+      onboardingCompleted: Boolean(parsed.onboardingCompleted),
     };
 
     // Otomatis regenerasi hearts saat dimuat jika ada jeda waktu berlalu

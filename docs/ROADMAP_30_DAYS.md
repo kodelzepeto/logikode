@@ -7,7 +7,7 @@
 ### MINGGU 1: Fondasi Profesional & UX Polish (v1.0.1 → v1.1.0)
 - [x] **Hari 1 (`v1.0.1`)**: Setup sistem versioning (`src/lib/version.ts`, `CHANGELOG.md`, sync `package.json`) + tampilkan badge versi aplikasi (`v1.0.1`) di halaman Profil.
 - [x] **Hari 2 (`v1.0.2`)**: Modal **"Apa yang Baru" (*What's New*)** — otomatis muncul 1x saat user membuka versi lebih baru dari yang tersimpan di `localStorage`, plus tombol "Lihat Riwayat Update" di Profil.
-- [ ] **Hari 3 (`v1.0.3`)**: **Onboarding 3-Slide** ramah pelajar untuk pengguna baru (isi nama panggilan & pilih target santai/serius harian, bisa di-skip).
+- [x] **Hari 3 (`v1.0.3`)**: **Onboarding 3-Slide** ramah pelajar untuk pengguna baru (isi nama panggilan & pilih target santai/serius harian, bisa di-skip).
 - [ ] **Hari 4 (`v1.0.4`)**: Sistem **Misi Harian (*Daily Quests*)** — 3 misi otomatis reset tiap hari (contoh: Selesaikan 1 level, Jawab 10 soal benar, Raih 50 XP) dengan klaim bonus XP.
 - [ ] **Hari 5 (`v1.0.5`)**: Efek **Combo Streak di dalam Kuis** (3x, 5x benar beruntun memunculkan badge animasi "🔥 Combo!" + suara khusus).
 - [ ] **Hari 6 (`v1.0.6`)**: Halaman **Kamus Koding Mini (`/glossary`)** dengan fitur pencarian cepat istilah IT (Variabel, Boolean, Loop, SQL, dll) tanpa server.

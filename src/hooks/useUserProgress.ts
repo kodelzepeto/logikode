@@ -14,7 +14,8 @@ import {
   MAX_HEARTS,
   ShopItemType,
 } from "@/lib/gamification";
-import { UserProgress } from "@/types/user";
+import { UserProgress, DailyGoalType } from "@/types/user";
+import { ONBOARDING_STORAGE_KEY } from "@/lib/onboarding";
 import {
   validateAndApplyVoucher,
   VoucherRewardType,
@@ -200,6 +201,46 @@ export function useUserProgress() {
     setProgressSnapshot(updated);
   }, []);
 
+  // Aksi: Mengubah nama panggilan pengguna
+  const setUserName = useCallback((name: string) => {
+    const current = getProgressSnapshot();
+    setProgressSnapshot({
+      ...current,
+      userName: name.trim(),
+    });
+  }, []);
+
+  // Aksi: Mengubah target ritme belajar harian
+  const setDailyGoal = useCallback((goal: DailyGoalType) => {
+    const current = getProgressSnapshot();
+    setProgressSnapshot({
+      ...current,
+      dailyGoal: goal,
+    });
+  }, []);
+
+  // Aksi: Menyelesaikan Onboarding 3-Slide
+  const completeOnboarding = useCallback(
+    (name: string, goal: DailyGoalType) => {
+      const current = getProgressSnapshot();
+      const cleanName = name.trim();
+      setProgressSnapshot({
+        ...current,
+        userName: cleanName || current.userName || "",
+        dailyGoal: goal,
+        onboardingCompleted: true,
+      });
+      if (typeof window !== "undefined") {
+        try {
+          window.localStorage.setItem(ONBOARDING_STORAGE_KEY, "true");
+        } catch {
+          // ignore
+        }
+      }
+    },
+    []
+  );
+
   // Live timer tick setiap detik saat hearts < 5 & tidak unlimited
   const [nowTime, setNowTime] = useState<number>(() => Date.now());
 
@@ -248,6 +289,9 @@ export function useUserProgress() {
     addStreakFreeze,
     activateUnlimitedHearts,
     resetProgress,
+    setUserName,
+    setDailyGoal,
+    completeOnboarding,
     countdownMs,
     countdownFormatted,
   };

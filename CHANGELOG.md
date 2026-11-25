@@ -3,6 +3,21 @@
 Semua perubahan penting pada proyek **LogiKode** oleh **Core Dev Group** didokumentasikan di berkas ini.
 Format penulisan mengacu pada [Keep a Changelog](https://keepachangelog.com/id/1.0.0/) dan proyek ini mematuhi prinsip [Semantic Versioning](https://semver.org/lang/id/).
 
+## [1.0.3] - 2026-11-25
+
+### Added
+- **Onboarding 3-Slide Pelajar (`src/components/onboarding/OnboardingModal.tsx`)**: Dialog pengenalan ramah pelajar 3-slide untuk menyambut pengguna baru dengan opsi lewati (*skip*).
+- **Personalisasi Profil & Nama Panggilan**: Memungkinkan pengguna memasukkan nama panggilan yang akan langsung ditampilkan pada sapaan beranda, profil, dan lembar sertifikat kelulusan resmi.
+- **Pemilihan Target Ritme Belajar Harian**: 4 opsi ritme harian (*Santai* 30 XP, *Biasa* 60 XP, *Serius* 100 XP, dan *Gila Koding* 150 XP) untuk membangun konsistensi belajar logika koding.
+- **Kartu Target Belajar di Profil**: Pengguna dapat melihat dan mengubah target belajar harian serta nama panggilan kapan saja.
+- **Sapaan Personal di Beranda (`LearningPath.tsx`)**: Menampilkan nama pengguna dan status target harian saat menjelajahi peta belajar.
+- **Unit Test Onboarding (`src/lib/__tests__/onboarding.test.ts`)**: Pengujian otomatis kelayakan tampil onboarding, konfigurasi target harian, dan storage flag.
+
+### Changed
+- Versi aplikasi dinaikkan menjadi `v1.0.3`.
+
+---
+
 ## [1.0.2] - 2026-11-24
 
 ### Added

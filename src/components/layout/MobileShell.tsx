@@ -4,11 +4,17 @@ import React, { useState, useSyncExternalStore } from "react";
 import { TopBar } from "./TopBar";
 import { BottomNav } from "./BottomNav";
 import { WhatsNewModal } from "@/components/modals/WhatsNewModal";
+import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
+import { useUserProgress } from "@/hooks/useUserProgress";
 import {
   APP_VERSION,
   getLastSeenVersion,
   shouldShowWhatsNew,
 } from "@/lib/version";
+import {
+  shouldShowOnboarding,
+  ONBOARDING_STORAGE_KEY,
+} from "@/lib/onboarding";
 
 interface MobileShellProps {
   children: React.ReactNode;
@@ -24,12 +30,21 @@ function subscribe(callback: () => void) {
   return () => window.removeEventListener("storage", callback);
 }
 
-function getSnapshot() {
+function getWhatsNewSnapshot() {
   const lastSeen = getLastSeenVersion();
   return shouldShowWhatsNew(APP_VERSION, lastSeen);
 }
 
-function getServerSnapshot() {
+function getOnboardingSnapshot() {
+  if (typeof window === "undefined") return false;
+  try {
+    return Boolean(window.localStorage.getItem(ONBOARDING_STORAGE_KEY));
+  } catch {
+    return false;
+  }
+}
+
+function getServerSnapshotFalse() {
   return false;
 }
 
@@ -40,14 +55,39 @@ export function MobileShell({
   className = "",
   disableAutoWhatsNew = false,
 }: MobileShellProps) {
+  const { progress, isLoaded, completeOnboarding } = useUserProgress();
+
   const needsWhatsNew = useSyncExternalStore(
     subscribe,
-    getSnapshot,
-    getServerSnapshot
+    getWhatsNewSnapshot,
+    getServerSnapshotFalse
   );
-  const [isDismissed, setIsDismissed] = useState(false);
 
-  const shouldShowModal = !disableAutoWhatsNew && needsWhatsNew && !isDismissed;
+  const hasOnboardingStorageFlag = useSyncExternalStore(
+    subscribe,
+    getOnboardingSnapshot,
+    getServerSnapshotFalse
+  );
+
+  const [isWhatsNewDismissed, setIsWhatsNewDismissed] = useState(false);
+  const [isOnboardingDismissed, setIsOnboardingDismissed] = useState(false);
+
+  // Evaluasi apakah onboarding 3-slide harus muncul otomatis
+  const needsOnboarding =
+    isLoaded &&
+    !isOnboardingDismissed &&
+    shouldShowOnboarding(
+      progress.onboardingCompleted,
+      progress.completedLevels.length,
+      hasOnboardingStorageFlag
+    );
+
+  // WhatsNew hanya muncul jika bukan pengguna baru yang sedang perlu onboarding
+  const shouldShowWhatsNewModal =
+    !disableAutoWhatsNew &&
+    needsWhatsNew &&
+    !isWhatsNewDismissed &&
+    !needsOnboarding;
 
   return (
     <div className="min-h-screen bg-slate-200/60 flex flex-col justify-between items-center selection:bg-emerald-200 selection:text-emerald-900">
@@ -59,10 +99,22 @@ export function MobileShell({
         {showBottomNav && <BottomNav />}
       </div>
 
+      {/* Modal Onboarding 3-Slide untuk Pengguna Baru */}
+      <OnboardingModal
+        isOpen={needsOnboarding}
+        onClose={() => setIsOnboardingDismissed(true)}
+        onComplete={(name, goal) => {
+          completeOnboarding(name, goal);
+          setIsOnboardingDismissed(true);
+        }}
+        initialName={progress.userName}
+        initialGoal={progress.dailyGoal}
+      />
+
       {/* Modal Otomatis "Apa yang Baru" (Muncul 1x saat ada update baru) */}
       <WhatsNewModal
-        isOpen={shouldShowModal}
-        onClose={() => setIsDismissed(true)}
+        isOpen={shouldShowWhatsNewModal}
+        onClose={() => setIsWhatsNewDismissed(true)}
       />
     </div>
   );
