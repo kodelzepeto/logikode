@@ -5,7 +5,7 @@
  * ===================================================================
  */
 
-export const APP_VERSION = "1.0.3";
+export const APP_VERSION = "1.0.4";
 export const APP_NAME = "LogiKode";
 export const APP_AUTHOR = "Core Dev Group";
 export const APP_AUTHOR_URL = "https://core-dev-group.my.id";
@@ -18,6 +18,17 @@ export interface ReleaseNote {
 }
 
 export const RELEASE_NOTES: ReleaseNote[] = [
+  {
+    version: "1.0.4",
+    date: "2026-11-26",
+    title: "Sistem Misi Harian (Daily Quests) & Klaim Bonus XP",
+    highlights: [
+      "3 misi harian otomatis reset tiap tengah malam (Selesaikan 1 Level, 10 Soal Benar, 50 XP)",
+      "Tombol klaim bonus XP interaktif dengan efek suara ceria chime Web Audio",
+      "Indikator progress bar interaktif & badge siap klaim dengan animasi visual",
+      "Widget Misi Harian di halaman Beranda Belajar dan halaman Profil",
+    ],
+  },
   {
     version: "1.0.3",
     date: "2026-11-25",

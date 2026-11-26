@@ -1,5 +1,13 @@
 export type DailyGoalType = "casual" | "regular" | "serious" | "intense";
 
+export interface DailyQuestProgress {
+  date: string; // format YYYY-MM-DD
+  levelsCompleted: number;
+  correctAnswers: number;
+  xpEarned: number;
+  claimedQuests: string[]; // daftar ID quest yang sudah diklaim hari ini
+}
+
 export interface UserProgress {
   xp: number;
   streak: number;
@@ -13,4 +21,5 @@ export interface UserProgress {
   userName?: string; // nama panggilan pengguna (opsional / default: "Pelajar LogiKode")
   dailyGoal?: DailyGoalType; // target ritme belajar harian (default: "regular")
   onboardingCompleted?: boolean; // status penyelesaian onboarding 3-slide
+  dailyQuestProgress?: DailyQuestProgress; // progres misi harian yang di-reset tiap hari
 }

@@ -56,6 +56,29 @@ export function loadProgress(): UserProgress {
           ? parsed.dailyGoal
           : "regular",
       onboardingCompleted: Boolean(parsed.onboardingCompleted),
+      dailyQuestProgress:
+        parsed.dailyQuestProgress &&
+        typeof parsed.dailyQuestProgress.date === "string" &&
+        typeof parsed.dailyQuestProgress.levelsCompleted === "number" &&
+        typeof parsed.dailyQuestProgress.correctAnswers === "number" &&
+        typeof parsed.dailyQuestProgress.xpEarned === "number" &&
+        Array.isArray(parsed.dailyQuestProgress.claimedQuests)
+          ? {
+              date: parsed.dailyQuestProgress.date,
+              levelsCompleted: Math.max(
+                0,
+                parsed.dailyQuestProgress.levelsCompleted
+              ),
+              correctAnswers: Math.max(
+                0,
+                parsed.dailyQuestProgress.correctAnswers
+              ),
+              xpEarned: Math.max(0, parsed.dailyQuestProgress.xpEarned),
+              claimedQuests: parsed.dailyQuestProgress.claimedQuests.filter(
+                (id) => typeof id === "string"
+              ),
+            }
+          : undefined,
     };
 
     // Otomatis regenerasi hearts saat dimuat jika ada jeda waktu berlalu

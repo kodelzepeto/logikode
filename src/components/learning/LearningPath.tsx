@@ -11,6 +11,7 @@ import { Level } from "@/types/curriculum";
 import { Lock, X, ArrowRight } from "lucide-react";
 import { AppFooter } from "@/components/layout/AppFooter";
 import { getDailyGoalConfig } from "@/lib/onboarding";
+import { DailyQuestsCard } from "@/components/quests/DailyQuestsCard";
 
 export function LearningPath() {
   const { progress } = useUserProgress();
@@ -65,6 +66,9 @@ export function LearningPath() {
         </div>
         <ArrowRight className="w-5 h-5 text-white/90 group-hover:translate-x-1 transition-transform" />
       </Link>
+
+      {/* Widget Misi Harian (Daily Quests) */}
+      <DailyQuestsCard className="mb-6" />
 
       {CURRICULUM_UNITS.map((unit, unitIdx) => {
         // Hitung berapa level yang selesai di unit ini

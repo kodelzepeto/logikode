@@ -11,6 +11,7 @@ import { getAllLevels, CURRICULUM_UNITS } from "@/data/curriculum";
 import { CertificateModal } from "@/components/certificate/CertificateModal";
 import { WhatsNewModal } from "@/components/modals/WhatsNewModal";
 import { OnboardingModal } from "@/components/onboarding/OnboardingModal";
+import { DailyQuestsCard } from "@/components/quests/DailyQuestsCard";
 import { getDailyGoalConfig } from "@/lib/onboarding";
 import {
   generateStoryShareImage,
@@ -184,6 +185,9 @@ export default function ProfilePage() {
             ✅ Progres belajar berhasil di-reset ke awal!
           </div>
         )}
+
+        {/* Widget Misi Harian (Daily Quests) */}
+        <DailyQuestsCard className="mb-4" />
 
         {/* Kartu Statistik & Tombol Pamer ke Story */}
         <section className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs">

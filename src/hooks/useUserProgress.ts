@@ -16,6 +16,7 @@ import {
 } from "@/lib/gamification";
 import { UserProgress, DailyGoalType } from "@/types/user";
 import { ONBOARDING_STORAGE_KEY } from "@/lib/onboarding";
+import { updateDailyQuestMetrics, claimQuestReward } from "@/lib/quests";
 import {
   validateAndApplyVoucher,
   VoucherRewardType,
@@ -185,21 +186,55 @@ export function useUserProgress() {
   }, []);
 
   // Aksi: Menyelesaikan sesi Latihan Acak (Endless Practice)
-  const completePractice = useCallback((xpEarned: number) => {
+  const completePractice = useCallback((xpEarned: number, correctAnswersCount?: number) => {
     const current = getProgressSnapshot();
     const now = Date.now();
     const todayStr = getTodayDateString(new Date(now));
     const streakUpdate = updateStreak(current, todayStr);
+    const correctCount = correctAnswersCount ?? Math.max(0, Math.round(xpEarned / 5));
 
-    const updated: UserProgress = {
+    const updatedBase: UserProgress = {
       ...current,
       xp: current.xp + xpEarned,
       streak: streakUpdate.streak,
       streakFreezes: streakUpdate.streakFreezes,
       lastPlayedDate: streakUpdate.lastPlayedDate,
     };
+
+    const updated = updateDailyQuestMetrics(
+      updatedBase,
+      {
+        correctAnswersDelta: correctCount,
+        xpEarnedDelta: xpEarned,
+      },
+      todayStr
+    );
+
     setProgressSnapshot(updated);
   }, []);
+
+  // Aksi: Mengklaim hadiah misi harian
+  const claimQuest = useCallback(
+    (
+      questId: string
+    ): {
+      success: boolean;
+      message: string;
+      rewardXP: number;
+    } => {
+      const current = getProgressSnapshot();
+      const result = claimQuestReward(current, questId);
+      if (result.success) {
+        setProgressSnapshot(result.progress);
+      }
+      return {
+        success: result.success,
+        message: result.message,
+        rewardXP: result.rewardXP,
+      };
+    },
+    []
+  );
 
   // Aksi: Mengubah nama panggilan pengguna
   const setUserName = useCallback((name: string) => {
@@ -292,6 +327,7 @@ export function useUserProgress() {
     setUserName,
     setDailyGoal,
     completeOnboarding,
+    claimQuest,
     countdownMs,
     countdownFormatted,
   };

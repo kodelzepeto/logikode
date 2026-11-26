@@ -196,3 +196,38 @@ export function playLevelComplete(): void {
     });
   } catch {}
 }
+
+/**
+ * Efek suara: Klaim Hadiah Misi Harian (Chime ceria bertingkat: G5 -> C6 -> E6)
+ */
+export function playQuestClaim(): void {
+  if (isSoundMuted()) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const now = ctx.currentTime;
+    const chime = [
+      { freq: 783.99, time: 0.0, duration: 0.09 }, // G5
+      { freq: 1046.5, time: 0.08, duration: 0.1 }, // C6
+      { freq: 1318.5, time: 0.16, duration: 0.35 }, // E6
+    ];
+
+    chime.forEach(({ freq, time, duration }) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now + time);
+
+      gain.gain.setValueAtTime(0.22, now + time);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + time + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now + time);
+      osc.stop(now + time + duration);
+    });
+  } catch {}
+}

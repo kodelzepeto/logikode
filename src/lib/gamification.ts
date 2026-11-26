@@ -1,5 +1,6 @@
 import { Level } from "@/types/curriculum";
 import { UserProgress } from "@/types/user";
+import { updateDailyQuestMetrics } from "./quests";
 
 export const MAX_HEARTS = 5;
 export const HEART_REGEN_INTERVAL_MS = 5 * 60 * 1000; // 5 menit
@@ -57,6 +58,7 @@ export function createInitialProgress(): UserProgress {
     userName: "",
     dailyGoal: "regular",
     onboardingCompleted: false,
+    dailyQuestProgress: undefined,
   };
 }
 
@@ -413,7 +415,7 @@ export function completeLevelProgress(
     ? currentProgress.completedLevels
     : [...currentProgress.completedLevels, levelId];
 
-  return {
+  const updatedBase: UserProgress = {
     ...currentProgress,
     xp: currentProgress.xp + earnedXP,
     streak: streakUpdate.streak,
@@ -424,4 +426,14 @@ export function completeLevelProgress(
     completedLevels: updatedCompletedLevels,
     redeemedVouchers: currentProgress.redeemedVouchers ?? [],
   };
+
+  return updateDailyQuestMetrics(
+    updatedBase,
+    {
+      levelsCompletedDelta: 1,
+      correctAnswersDelta: correctAnswersCount,
+      xpEarnedDelta: earnedXP,
+    },
+    todayStr
+  );
 }

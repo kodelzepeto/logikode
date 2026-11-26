@@ -126,7 +126,7 @@ export default function PracticePage() {
     } else {
       // Sesi selesai! Dapatkan reward XP (+5 per jawaban benar)
       const earnedXP = correctCount * 5;
-      completePractice(earnedXP);
+      completePractice(earnedXP, correctCount);
       playLevelComplete();
       setIsFinished(true);
     }

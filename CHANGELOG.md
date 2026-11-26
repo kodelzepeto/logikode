@@ -3,6 +3,24 @@
 Semua perubahan penting pada proyek **LogiKode** oleh **Core Dev Group** didokumentasikan di berkas ini.
 Format penulisan mengacu pada [Keep a Changelog](https://keepachangelog.com/id/1.0.0/) dan proyek ini mematuhi prinsip [Semantic Versioning](https://semver.org/lang/id/).
 
+## [1.0.4] - 2026-11-26
+
+### Added
+- **Sistem Misi Harian / Daily Quests (`src/lib/quests.ts`)**: 3 misi otomatis aktif dan me-reset setiap tengah malam secara deterministik tanpa server:
+  - 🏆 *Selesaikan 1 Level* (+15 XP)
+  - 🎯 *Jawab 10 Soal Benar* (+20 XP)
+  - ⚡ *Raih 50 XP Hari Ini* (+25 XP)
+- **Komponen Kartu Misi Harian (`src/components/quests/DailyQuestsCard.tsx`)**: Menampilkan daftar misi, countdown sisa waktu reset tengah malam, progress bar interaktif, badge status siap klaim beranimasi, dan tombol toggle accordion.
+- **Mekanik Klaim Bonus XP Interaktif**: Tombol klaim interaktif dengan proteksi anti klaim ganda (*anti-double claim*) dan audio synthesis chime ceria (`playQuestClaim`) via Web Audio API bebas latensi.
+- **Integrasi Gamifikasi Terpadu**: Penyelesaian level kuis (`completeLevel`) dan sesi latihan acak (`completePractice`) otomatis memperbarui metrik misi harian secara serempak.
+- **Penempatan Widget di Beranda & Profil**: Memudahkan pelajar memantau pencapaian misi baik saat belajar di beranda maupun saat meninjau profil statistik.
+- **Unit Test Komprehensif Misi Harian (`src/lib/__tests__/quests.test.ts`)**: 8 skenario pengujian unit test Vitest mencakup reset harian, kalkulasi status, pencegahan klaim sebelum tuntas, dan anti-double claim.
+
+### Changed
+- Versi aplikasi dinaikkan menjadi `v1.0.4`.
+
+---
+
 ## [1.0.3] - 2026-11-25
 
 ### Added
