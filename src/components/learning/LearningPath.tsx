@@ -8,7 +8,7 @@ import { isLevelUnlocked } from "@/lib/gamification";
 import { UnitBanner } from "./UnitBanner";
 import { LevelNode, LevelStatus } from "./LevelNode";
 import { Level } from "@/types/curriculum";
-import { Lock, X, ArrowRight } from "lucide-react";
+import { Lock, X } from "lucide-react";
 import { AppFooter } from "@/components/layout/AppFooter";
 import { getDailyGoalConfig } from "@/lib/onboarding";
 import { DailyQuestsCard } from "@/components/quests/DailyQuestsCard";
@@ -41,31 +41,48 @@ export function LearningPath() {
         </div>
       )}
 
-      {/* Kartu Akses Cepat Mode Latihan Acak */}
-      <Link
-        href="/practice"
-        className="w-full max-w-sm mb-6 p-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-sm border-b-4 border-amber-700 active:translate-y-1 active:border-b-0 flex items-center justify-between group transition-all select-none"
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-white font-black text-xl shadow-inner group-hover:scale-110 transition-transform">
-            ⚡
+      {/* Grid Akses Cepat: Latihan Acak & Kamus Koding */}
+      <div className="w-full max-w-sm grid grid-cols-2 gap-2.5 mb-5">
+        <Link
+          href="/practice"
+          className="p-3.5 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-2xs border-b-3 border-amber-700 active:translate-y-0.5 active:border-b-0 flex flex-col justify-between group transition-all select-none"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-2xl group-hover:scale-110 transition-transform">⚡</span>
+            <span className="text-[9px] bg-white/25 px-1.5 py-0.2 rounded-full font-black uppercase tracking-wider">
+              Endless
+            </span>
           </div>
           <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-black text-sm tracking-tight">
-                Latihan Cepat (Acak)
-              </span>
-              <span className="text-[10px] bg-white/25 px-1.5 py-0.5 rounded-full font-bold uppercase">
-                Endless
-              </span>
-            </div>
-            <p className="text-[11px] text-white/90 mt-0.5">
-              Asah terus kemampuan & raih +5 XP tanpa batas!
-            </p>
+            <span className="font-black text-xs block leading-tight">
+              Latihan Acak
+            </span>
+            <span className="text-[10px] text-white/90 font-medium">
+              Asah logika &amp; +5 XP
+            </span>
           </div>
-        </div>
-        <ArrowRight className="w-5 h-5 text-white/90 group-hover:translate-x-1 transition-transform" />
-      </Link>
+        </Link>
+
+        <Link
+          href="/glossary"
+          className="p-3.5 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white shadow-2xs border-b-3 border-teal-800 active:translate-y-0.5 active:border-b-0 flex flex-col justify-between group transition-all select-none"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-2xl group-hover:scale-110 transition-transform">📖</span>
+            <span className="text-[9px] bg-white/25 px-1.5 py-0.2 rounded-full font-black uppercase tracking-wider">
+              25 Istilah
+            </span>
+          </div>
+          <div>
+            <span className="font-black text-xs block leading-tight">
+              Kamus Koding
+            </span>
+            <span className="text-[10px] text-white/90 font-medium">
+              Cari istilah &amp; analogi
+            </span>
+          </div>
+        </Link>
+      </div>
 
       {/* Widget Misi Harian (Daily Quests) */}
       <DailyQuestsCard className="mb-6" />

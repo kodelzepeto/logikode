@@ -3,6 +3,25 @@
 Semua perubahan penting pada proyek **LogiKode** oleh **Core Dev Group** didokumentasikan di berkas ini.
 Format penulisan mengacu pada [Keep a Changelog](https://keepachangelog.com/id/1.0.0/) dan proyek ini mematuhi prinsip [Semantic Versioning](https://semver.org/lang/id/).
 
+## [1.0.6] - 2026-11-28
+
+### Added
+- **Halaman Kamus Koding Mini (`/glossary`)**: Direktori referensi interaktif memuat 25 istilah logika dan konsep pemrograman IT penting:
+  - Definisi ramah pelajar & pemula.
+  - Analogi dunia nyata untuk memudahkan pemahaman konsep abstrak.
+  - Contoh cuplikan kode praktis dengan tombol salin instan (*copy to clipboard*).
+  - Istilah terkait (*related terms*) yang saling terhubung.
+- **Pencarian Cepat Offline Tanpa Server (`src/lib/glossary.ts`)**: Pencarian instan bebas latensi (Rp 0) mendukung kata kunci istilah Indonesia, Inggris, definisi, analogi, maupun kategori.
+- **Filter Kategori Terstruktur**: Tab kategori *Dasar Logika*, *Kontrol Alur*, *Struktur Data*, *Fungsi & Modularitas*, *Database & SQL*, serta *Debugging & Algoritma*.
+- **Integrasi Navigasi di Beranda & Profil**: Grid menu akses cepat 2-kolom di beranda belajar (`LearningPath.tsx`) dan kartu menu di profil pengguna (`/profile`).
+- **Pembaruan Sitemap**: Mendaftarkan rute `/glossary` pada `src/app/sitemap.ts` untuk pengindeksan SEO publik.
+- **Unit Test Kamus Koding (`src/lib/__tests__/glossary.test.ts`)**: 9 skenario pengujian unit test Vitest mencakup integritas dataset, pencarian istilah, filtering kategori, case-insensitivity, dan perhitungan statistik.
+
+### Changed
+- Versi aplikasi dinaikkan menjadi `v1.0.6`.
+
+---
+
 ## [1.0.5] - 2026-11-27
 
 ### Added

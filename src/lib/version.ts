@@ -5,7 +5,7 @@
  * ===================================================================
  */
 
-export const APP_VERSION = "1.0.5";
+export const APP_VERSION = "1.0.6";
 export const APP_NAME = "LogiKode";
 export const APP_AUTHOR = "Core Dev Group";
 export const APP_AUTHOR_URL = "https://core-dev-group.my.id";
@@ -18,6 +18,18 @@ export interface ReleaseNote {
 }
 
 export const RELEASE_NOTES: ReleaseNote[] = [
+  {
+    version: "1.0.6",
+    date: "2026-11-28",
+    title: "Kamus Koding Mini (/glossary) & Pencarian Cepat Istilah IT",
+    highlights: [
+      "Halaman baru Kamus Koding Mini (/glossary) memuat 25 istilah logika koding esensial",
+      "Pencarian instan offline tanpa server (Filter cepat istilah ID/EN, definisi, dan analogi)",
+      "Kategori istilah terstruktur (Dasar Logika, Kontrol Alur, Struktur Data, SQL, dll)",
+      "Dilengkapi analogi dunia nyata ramah pemula dan contoh cuplikan kode yang bisa disalin",
+      "Akses cepat dari Beranda Belajar dan Halaman Profil",
+    ],
+  },
   {
     version: "1.0.5",
     date: "2026-11-27",

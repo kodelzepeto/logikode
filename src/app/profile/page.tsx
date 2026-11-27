@@ -35,6 +35,7 @@ import {
   Lock,
   ShieldCheck,
   Pencil,
+  ArrowRight,
 } from "lucide-react";
 
 export default function ProfilePage() {
@@ -443,6 +444,32 @@ export default function ProfilePage() {
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
         </section>
+
+        {/* Akses Cepat Kamus Koding Mini */}
+        <Link
+          href="/glossary"
+          className="bg-white rounded-3xl p-4 border border-slate-200/80 shadow-xs flex items-center justify-between group hover:border-emerald-300 transition-all select-none"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-teal-50 border border-teal-200/80 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+              📖
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <h3 className="text-xs font-black text-slate-800">
+                  Kamus Koding Mini
+                </h3>
+                <span className="text-[9px] font-bold text-teal-700 bg-teal-50 px-1.5 py-0.2 rounded-full border border-teal-200">
+                  25 Istilah
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 font-medium">
+                Cari &amp; pahami arti Variabel, Boolean, Loop, SQL, dll.
+              </p>
+            </div>
+          </div>
+          <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 group-hover:translate-x-1 transition-transform" />
+        </Link>
 
         {/* Zona Pengujian & Pengaturan Data */}
         <section className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs">

@@ -10,7 +10,7 @@
 - [x] **Hari 3 (`v1.0.3`)**: **Onboarding 3-Slide** ramah pelajar untuk pengguna baru (isi nama panggilan & pilih target santai/serius harian, bisa di-skip).
 - [x] **Hari 4 (`v1.0.4`)**: Sistem **Misi Harian (*Daily Quests*)** — 3 misi otomatis reset tiap hari (contoh: Selesaikan 1 level, Jawab 10 soal benar, Raih 50 XP) dengan klaim bonus XP.
 - [x] **Hari 5 (`v1.0.5`)**: Efek **Combo Streak di dalam Kuis** (3x, 5x benar beruntun memunculkan badge animasi "🔥 Combo!" + suara khusus).
-- [ ] **Hari 6 (`v1.0.6`)**: Halaman **Kamus Koding Mini (`/glossary`)** dengan fitur pencarian cepat istilah IT (Variabel, Boolean, Loop, SQL, dll) tanpa server.
+- [x] **Hari 6 (`v1.0.6`)**: Halaman **Kamus Koding Mini (`/glossary`)** dengan fitur pencarian cepat istilah IT (Variabel, Boolean, Loop, SQL, dll) tanpa server.
 - [ ] **Hari 7 (`v1.1.0` - MINOR)**: **Dark Mode / Light Mode Toggle** dengan persistensi `localStorage` + audit kontras seluruh halaman.
 
 ### MINGGU 2: Ekspansi Konten & Belajar Cerdas (v1.1.1 → v1.2.0)
