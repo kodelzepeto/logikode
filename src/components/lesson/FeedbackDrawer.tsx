@@ -2,13 +2,15 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, XCircle, ArrowRight } from "lucide-react";
+import { CheckCircle2, XCircle, ArrowRight, Sparkles } from "lucide-react";
+import { ComboMilestone } from "@/lib/combo";
 
 interface FeedbackDrawerProps {
   isCorrect: boolean;
   explanation: string;
   correctAnswerDisplay: string;
   onNext: () => void;
+  comboMilestone?: ComboMilestone | null;
 }
 
 export function FeedbackDrawer({
@@ -16,6 +18,7 @@ export function FeedbackDrawer({
   explanation,
   correctAnswerDisplay,
   onNext,
+  comboMilestone,
 }: FeedbackDrawerProps) {
   return (
     <motion.div
@@ -30,6 +33,40 @@ export function FeedbackDrawer({
       }`}
     >
       <div className="flex flex-col gap-3">
+        {/* Badge Selebrasi Combo Streak (jika mencapai milestone 3x, 5x, dst) */}
+        {isCorrect && comboMilestone && (
+          <motion.div
+            initial={{ scale: 0.85, y: -8, opacity: 0 }}
+            animate={{ scale: [0.85, 1.06, 1], y: 0, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 350, damping: 20 }}
+            className={`w-full py-2.5 px-3.5 rounded-2xl shadow-md border-b-2 flex items-center justify-between text-white ${
+              comboMilestone.theme === "purple"
+                ? "bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-600 border-purple-800"
+                : comboMilestone.theme === "orange"
+                ? "bg-gradient-to-r from-orange-600 via-amber-500 to-yellow-500 border-orange-800"
+                : "bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 border-amber-800"
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="text-2xl animate-bounce">{comboMilestone.icon}</span>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <p className="font-black text-xs uppercase tracking-tight">
+                    {comboMilestone.badgeText}
+                  </p>
+                  <span className="text-[9px] bg-white/25 px-1.5 py-0.2 rounded-full font-extrabold uppercase">
+                    Streak 🔥
+                  </span>
+                </div>
+                <p className="text-[11px] text-white/95 font-medium leading-tight">
+                  {comboMilestone.subtitle}
+                </p>
+              </div>
+            </div>
+            <Sparkles className="w-4 h-4 text-amber-200 shrink-0" />
+          </motion.div>
+        )}
+
         {/* Judul & Ikon Status */}
         <div className="flex items-center gap-2.5">
           {isCorrect ? (

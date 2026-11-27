@@ -3,6 +3,8 @@
  * 100% Client-side, ringan, bebas latency, dan aman dari SSR.
  */
 
+import { getComboSoundType } from "./combo";
+
 let audioCtx: AudioContext | null = null;
 
 function getAudioContext(): AudioContext | null {
@@ -230,4 +232,95 @@ export function playQuestClaim(): void {
       osc.stop(now + time + duration);
     });
   } catch {}
+}
+
+/**
+ * Efek suara: 3x Combo Streak (Melodi arpeggio bersemangat: C5 -> E5 -> G5 -> C6)
+ */
+export function playCombo3(): void {
+  if (isSoundMuted()) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const now = ctx.currentTime;
+    const notes = [
+      { freq: 523.25, time: 0.0, duration: 0.08 }, // C5
+      { freq: 659.25, time: 0.07, duration: 0.09 }, // E5
+      { freq: 783.99, time: 0.14, duration: 0.1 }, // G5
+      { freq: 1046.5, time: 0.22, duration: 0.3 }, // C6
+    ];
+
+    notes.forEach(({ freq, time, duration }) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, now + time);
+
+      gain.gain.setValueAtTime(0.2, now + time);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + time + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now + time);
+      osc.stop(now + time + duration);
+    });
+  } catch {}
+}
+
+/**
+ * Efek suara: 5x+ Combo Streak Super (Fanfare akor petir ceria: G4 -> C5 -> E5 -> G5 -> C6 -> E6)
+ */
+export function playCombo5(): void {
+  if (isSoundMuted()) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  try {
+    const now = ctx.currentTime;
+    const notes = [
+      { freq: 392.0, time: 0.0, duration: 0.07 }, // G4
+      { freq: 523.25, time: 0.06, duration: 0.07 }, // C5
+      { freq: 659.25, time: 0.12, duration: 0.08 }, // E5
+      { freq: 783.99, time: 0.18, duration: 0.09 }, // G5
+      { freq: 1046.5, time: 0.25, duration: 0.12 }, // C6
+      { freq: 1318.5, time: 0.34, duration: 0.4 }, // E6
+    ];
+
+    notes.forEach(({ freq, time, duration }) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, now + time);
+
+      gain.gain.setValueAtTime(0.24, now + time);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + time + duration);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(now + time);
+      osc.stop(now + time + duration);
+    });
+  } catch {}
+}
+
+/**
+ * Helper terpadu pemutar suara kuis:
+ * Jika combo >= 5 -> mainkan suara 5x combo
+ * Jika combo >= 3 -> mainkan suara 3x combo
+ * Default: mainkan suara benar normal
+ */
+export function playComboSound(comboCount: number): void {
+  const soundType = getComboSoundType(comboCount);
+  if (soundType === "combo_5") {
+    playCombo5();
+  } else if (soundType === "combo_3") {
+    playCombo3();
+  } else {
+    playCorrect();
+  }
 }

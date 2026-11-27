@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { X, Zap, Award, RotateCcw, Home, Share2, Sparkles } from "lucide-react";
+import { X, Zap, Award, RotateCcw, Home, Share2, Sparkles, Flame } from "lucide-react";
 import type { Question, Level } from "@/types/curriculum";
 import { getAllLevels } from "@/data/curriculum";
 import { useUserProgress } from "@/hooks/useUserProgress";
@@ -12,7 +12,9 @@ import {
   playWrong,
   playLevelComplete,
   playClick,
+  playComboSound,
 } from "@/lib/sound";
+import { updateCombo, ComboMilestone } from "@/lib/combo";
 import {
   generateStoryShareImage,
   downloadDataUrl,
@@ -49,6 +51,8 @@ export default function PracticePage() {
     (ValidationResult & { explanation: string }) | null
   >(null);
   const [correctCount, setCorrectCount] = useState(0);
+  const [comboCount, setComboCount] = useState(0);
+  const [activeMilestone, setActiveMilestone] = useState<ComboMilestone | null>(null);
   const [isFinished, setIsFinished] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
 
@@ -60,6 +64,8 @@ export default function PracticePage() {
     setIsAnswerChecked(false);
     setFeedback(null);
     setCorrectCount(0);
+    setComboCount(0);
+    setActiveMilestone(null);
     setIsFinished(false);
   };
 
@@ -101,9 +107,17 @@ export default function PracticePage() {
 
     const result = validateAnswer(currentQuestion, userAnswer);
 
+    const { newCombo, milestone } = updateCombo(comboCount, result.isCorrect);
+    setComboCount(newCombo);
+    setActiveMilestone(milestone);
+
     if (result.isCorrect) {
       setCorrectCount((prev) => prev + 1);
-      playCorrect();
+      if (milestone) {
+        playComboSound(newCombo);
+      } else {
+        playCorrect();
+      }
     } else {
       playWrong();
     }
@@ -123,6 +137,7 @@ export default function PracticePage() {
       setUserAnswer(null);
       setIsAnswerChecked(false);
       setFeedback(null);
+      setActiveMilestone(null);
     } else {
       // Sesi selesai! Dapatkan reward XP (+5 per jawaban benar)
       const earnedXP = correctCount * 5;
@@ -250,6 +265,17 @@ export default function PracticePage() {
           />
         </div>
 
+        {/* Indikator Active Combo Streak (jika >= 2) */}
+        {comboCount >= 2 && (
+          <div
+            className="flex items-center gap-1 font-black text-xs text-orange-600 bg-orange-50 border border-orange-200/90 px-2 py-1 rounded-xl shadow-2xs animate-fadeIn shrink-0"
+            title={`${comboCount}x Jawaban Benar Beruntun!`}
+          >
+            <Flame className="w-3.5 h-3.5 fill-orange-500 text-orange-500 animate-pulse" />
+            <span>{comboCount}x</span>
+          </div>
+        )}
+
         <div className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-amber-50 border border-amber-200 text-amber-600 font-black text-xs">
           <Zap className="w-3.5 h-3.5 fill-amber-500" />
           <span>+5 XP</span>
@@ -330,6 +356,7 @@ export default function PracticePage() {
           correctAnswerDisplay={feedback.correctAnswerDisplay}
           explanation={feedback.explanation}
           onNext={handleNext}
+          comboMilestone={activeMilestone}
         />
       )}
     </div>

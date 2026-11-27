@@ -5,7 +5,7 @@
  * ===================================================================
  */
 
-export const APP_VERSION = "1.0.4";
+export const APP_VERSION = "1.0.5";
 export const APP_NAME = "LogiKode";
 export const APP_AUTHOR = "Core Dev Group";
 export const APP_AUTHOR_URL = "https://core-dev-group.my.id";
@@ -18,6 +18,18 @@ export interface ReleaseNote {
 }
 
 export const RELEASE_NOTES: ReleaseNote[] = [
+  {
+    version: "1.0.5",
+    date: "2026-11-27",
+    title: "Efek Combo Streak Kuis & Efek Suara Spesial Web Audio",
+    highlights: [
+      "Pelacak rentetan jawaban benar beruntun (Combo Streak) di dalam kuis & latihan acak",
+      "Badge selebrasi animasi '3x Combo! 🔥' dan '5x Combo! ⚡' di bilah feedback jawaban",
+      "Efek suara arpeggio khusus Web Audio API bertingkat untuk combo 3x dan 5x+",
+      "Pill indikator api aktif di LessonHeader saat combo minimal 2x",
+      "Penghargaan Combo Terbaik di layar rangkuman akhir penyelesaian level",
+    ],
+  },
   {
     version: "1.0.4",
     date: "2026-11-26",

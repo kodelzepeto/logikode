@@ -3,6 +3,24 @@
 Semua perubahan penting pada proyek **LogiKode** oleh **Core Dev Group** didokumentasikan di berkas ini.
 Format penulisan mengacu pada [Keep a Changelog](https://keepachangelog.com/id/1.0.0/) dan proyek ini mematuhi prinsip [Semantic Versioning](https://semver.org/lang/id/).
 
+## [1.0.5] - 2026-11-27
+
+### Added
+- **Sistem Combo Streak Kuis (`src/lib/combo.ts`)**: Pure logic untuk melacak dan mereset rentetan jawaban benar berturut-turut di sesi kuis kurikulum maupun latihan acak.
+- **Badge Selebrasi Animasi Combo (`FeedbackDrawer.tsx`)**: Muncul otomatis di atas bilah feedback jawaban saat pelajar mencapai milestone jawaban beruntun (3x Combo 🔥, 5x Combo ⚡, 7x Super Combo 🌟).
+- **Efek Audio Sintesis Khusus Web Audio API (`src/lib/sound.ts`)**:
+  - `playCombo3()`: Melodi arpeggio 4-nada ceria dan bersemangat (C5 -> E5 -> G5 -> C6).
+  - `playCombo5()`: Fanfare megah 6-nada akor petir ceria (G4 -> C5 -> E5 -> G5 -> C6 -> E6).
+  - `playComboSound()`: Dispatcher suara adaptif berbasis perolehan combo.
+- **Pill Indikator Api Aktif (`LessonHeader.tsx` & `practice/page.tsx`)**: Menampilkan pill api menyala beranimasi pantul saat combo minimal 2x untuk membangun rasa antisipasi pelajar.
+- **Badge Selebrasi Combo Terbaik di Layar Akhir (`LessonComplete.tsx`)**: Menampilkan lencana prestasi combo tertinggi yang diraih selama sesi kuis berlangsung.
+- **Unit Test Komprehensif Combo Streak (`src/lib/__tests__/combo.test.ts`)**: 8 skenario pengujian unit test Vitest mencakup milestone detection, updateCombo, reset saat salah, formatting label, dan sound dispatching.
+
+### Changed
+- Versi aplikasi dinaikkan menjadi `v1.0.5`.
+
+---
+
 ## [1.0.4] - 2026-11-26
 
 ### Added

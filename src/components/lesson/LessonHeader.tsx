@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { X, Heart, Infinity as InfinityIcon, AlertTriangle } from "lucide-react";
+import { X, Heart, Infinity as InfinityIcon, AlertTriangle, Flame } from "lucide-react";
 
 interface LessonHeaderProps {
   currentQuestionIndex: number;
@@ -10,6 +10,7 @@ interface LessonHeaderProps {
   hearts: number;
   isUnlimited: boolean;
   progressPercentOverride?: number;
+  comboCount?: number;
 }
 
 export function LessonHeader({
@@ -18,6 +19,7 @@ export function LessonHeader({
   hearts,
   isUnlimited,
   progressPercentOverride,
+  comboCount = 0,
 }: LessonHeaderProps) {
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
@@ -32,7 +34,7 @@ export function LessonHeader({
 
   return (
     <>
-      <header className="w-full flex items-center justify-between gap-3 px-4 py-3 bg-white border-b border-slate-200 select-none">
+      <header className="w-full flex items-center justify-between gap-2.5 px-4 py-3 bg-white border-b border-slate-200 select-none">
         {/* Tombol Tutup / Keluar */}
         <button
           type="button"
@@ -51,9 +53,20 @@ export function LessonHeader({
           />
         </div>
 
+        {/* Indikator Active Combo Streak (jika >= 2) */}
+        {comboCount >= 2 && (
+          <div
+            className="flex items-center gap-1 font-black text-xs text-orange-600 bg-orange-50 border border-orange-200/90 px-2 py-1 rounded-xl shadow-2xs animate-fadeIn shrink-0"
+            title={`${comboCount}x Jawaban Benar Beruntun!`}
+          >
+            <Flame className="w-3.5 h-3.5 fill-orange-500 text-orange-500 animate-pulse" />
+            <span>{comboCount}x</span>
+          </div>
+        )}
+
         {/* Indikator Hearts */}
         <div
-          className="flex items-center gap-1 font-black text-sm text-rose-500 bg-rose-50 border border-rose-200/70 px-2.5 py-1 rounded-xl"
+          className="flex items-center gap-1 font-black text-sm text-rose-500 bg-rose-50 border border-rose-200/70 px-2.5 py-1 rounded-xl shrink-0"
           title={isUnlimited ? "Unlimited Hearts Aktif" : `Sisa Nyawa: ${hearts}`}
         >
           <Heart className="w-4 h-4 fill-rose-500 text-rose-500" />

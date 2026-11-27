@@ -28,7 +28,9 @@ import {
   playWrong,
   playLevelComplete,
   playClick,
+  playComboSound,
 } from "@/lib/sound";
+import { updateCombo, ComboMilestone } from "@/lib/combo";
 import { LessonHeader } from "./LessonHeader";
 import { MultipleChoiceQuestion } from "./MultipleChoiceQuestion";
 import { CodeOrderQuestion } from "./CodeOrderQuestion";
@@ -57,6 +59,11 @@ export function LessonRunner({ level }: LessonRunnerProps) {
     (ValidationResult & { explanation: string }) | null
   >(null);
   const [isFinished, setIsFinished] = useState(false);
+
+  // Combo Streak di dalam sesi kuis
+  const [comboCount, setComboCount] = useState(0);
+  const [maxCombo, setMaxCombo] = useState(0);
+  const [activeMilestone, setActiveMilestone] = useState<ComboMilestone | null>(null);
 
   // Tunggu client mount untuk menghindari hydration mismatch
   if (!isLoaded) {
@@ -132,6 +139,7 @@ export function LessonRunner({ level }: LessonRunnerProps) {
           accuracy={accuracy}
           streak={progress.streak}
           nextLevelId={nextLevelId}
+          maxCombo={maxCombo}
         />
       </div>
     );
@@ -169,8 +177,20 @@ export function LessonRunner({ level }: LessonRunnerProps) {
 
     const result = validateAnswer(currentQuestion, userAnswer);
 
+    // Hitung Combo Streak di dalam kuis
+    const { newCombo, milestone } = updateCombo(comboCount, result.isCorrect);
+    setComboCount(newCombo);
+    if (newCombo > maxCombo) {
+      setMaxCombo(newCombo);
+    }
+    setActiveMilestone(milestone);
+
     if (result.isCorrect) {
-      playCorrect();
+      if (milestone) {
+        playComboSound(newCombo);
+      } else {
+        playCorrect();
+      }
     } else {
       consumeHeart();
       playWrong();
@@ -193,6 +213,7 @@ export function LessonRunner({ level }: LessonRunnerProps) {
     if (!feedback.isCorrect && progress.hearts <= 1 && !isUnlimited) {
       setIsAnswerChecked(false);
       setFeedback(null);
+      setActiveMilestone(null);
       return;
     }
 
@@ -210,6 +231,7 @@ export function LessonRunner({ level }: LessonRunnerProps) {
         setUserAnswer(null);
         setIsAnswerChecked(false);
         setFeedback(null);
+        setActiveMilestone(null);
       }
     } else {
       // Jawaban salah: pindahkan soal aktif ke bagian belakang antrean (Duolingo Retry Queue)
@@ -218,6 +240,7 @@ export function LessonRunner({ level }: LessonRunnerProps) {
       setUserAnswer(null);
       setIsAnswerChecked(false);
       setFeedback(null);
+      setActiveMilestone(null);
     }
   };
 
@@ -268,6 +291,7 @@ export function LessonRunner({ level }: LessonRunnerProps) {
         hearts={progress.hearts}
         isUnlimited={isUnlimited}
         progressPercentOverride={progressPercent}
+        comboCount={comboCount}
       />
 
       {/* Konten Soal */}
@@ -319,6 +343,7 @@ export function LessonRunner({ level }: LessonRunnerProps) {
           explanation={feedback.explanation}
           correctAnswerDisplay={feedback.correctAnswerDisplay}
           onNext={handleNext}
+          comboMilestone={activeMilestone}
         />
       )}
     </div>

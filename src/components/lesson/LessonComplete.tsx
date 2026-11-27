@@ -28,6 +28,7 @@ interface LessonCompleteProps {
   accuracy: number;
   streak: number;
   nextLevelId: string | null;
+  maxCombo?: number;
 }
 
 export function LessonComplete({
@@ -36,6 +37,7 @@ export function LessonComplete({
   accuracy,
   streak,
   nextLevelId,
+  maxCombo,
 }: LessonCompleteProps) {
   const { progress } = useUserProgress();
   const allLevels = getAllLevels();
@@ -80,7 +82,7 @@ export function LessonComplete({
         </h1>
 
         {/* Badge Akurasi ala Duolingo */}
-        <div className="mt-2 mb-1">
+        <div className="mt-2 mb-1 flex flex-wrap items-center justify-center gap-1.5">
           {accuracy >= 100 ? (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 border border-amber-300 text-amber-900 rounded-full text-xs font-black shadow-2xs">
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
@@ -90,6 +92,13 @@ export function LessonComplete({
             <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 border border-emerald-300 text-emerald-900 rounded-full text-xs font-black shadow-2xs">
               <ThumbsUp className="w-3.5 h-3.5 text-emerald-600" />
               <span>👍 Bagus!</span>
+            </span>
+          )}
+
+          {Boolean(maxCombo && maxCombo >= 3) && (
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-orange-100 border border-orange-300 text-orange-900 rounded-full text-xs font-black shadow-2xs">
+              <Flame className="w-3.5 h-3.5 text-orange-600 fill-orange-500" />
+              <span>{maxCombo}x Combo!</span>
             </span>
           )}
         </div>
